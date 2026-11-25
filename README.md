@@ -17,6 +17,7 @@
 | `esphome/secrets.yaml.example` | Wi-Fi 비밀번호 예시 (`secrets.yaml`로 복사해 사용, git에 올리지 않음) |
 | `docs/protocol.md` | 분석한 프로토콜 기록 |
 | `docs/rv-c.md` | 캠핑카 표준 RV-C(CAN) 요약 |
+| `docs/research.md` | 셰다 전기·비슷한 패널 조사, CAN+ESP32 연결 사례 |
 
 ## 진행 순서
 
