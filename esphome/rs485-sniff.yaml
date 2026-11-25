@@ -1,0 +1,36 @@
+# Nova-23P 패널 RS485 버스 엿듣기 (수신만 한다. 버스에 아무것도 보내지 않는다).
+# 핀 번호는 Waveshare 위키의 보드 핀맵으로 확인해 고친다.
+esphome:
+  name: eurovan-panel
+
+esp32:
+  board: esp32-s3-devkitc-1
+  framework:
+    type: esp-idf
+
+logger:
+  level: DEBUG
+
+wifi:
+  ap:
+    ssid: "Eurovan"
+    password: !secret ap_password
+
+web_server:
+  port: 80
+
+uart:
+  id: bus
+  tx_pin: GPIO17   # TODO: 보드 RS485 TX 핀
+  rx_pin: GPIO18   # TODO: 보드 RS485 RX 핀
+  baud_rate: 9600  # 깨져 보이면 19200, 38400, 115200 순으로 바꿔 본다
+  data_bits: 8
+  parity: NONE
+  stop_bits: 1
+  debug:
+    direction: RX
+    dummy_receiver: true
+    after:
+      timeout: 20ms   # 20ms 동안 조용하면 한 패킷으로 끊어 출력
+    sequence:
+      - lambda: UARTDebug::log_hex(direction, bytes, ' ');

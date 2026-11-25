@@ -1,0 +1,35 @@
+# Nova-23P 패널 CAN 버스 엿듣기. 모든 ID의 프레임을 로그로 찍는다.
+# 핀 번호는 Waveshare 위키의 보드 핀맵으로 확인해 고친다.
+esphome:
+  name: eurovan-panel
+
+esp32:
+  board: esp32-s3-devkitc-1
+  framework:
+    type: esp-idf
+
+logger:
+  level: DEBUG
+
+wifi:
+  ap:
+    ssid: "Eurovan"
+    password: !secret ap_password
+
+web_server:
+  port: 80
+
+canbus:
+  - platform: esp32_can
+    id: can_bus
+    tx_pin: GPIO15      # TODO: 보드 CAN TX 핀
+    rx_pin: GPIO16      # TODO: 보드 CAN RX 핀
+    bit_rate: 250kbps   # 아무것도 안 잡히거나 에러가 나면 125kbps, 500kbps로 바꿔 본다
+    can_id: 0x7FF       # 보드 자신의 ID(송신하지 않으므로 의미 없음)
+    on_frame:
+      - can_id: 0
+        can_id_mask: 0  # 모든 ID 수신
+        then:
+          - lambda: |-
+              ESP_LOGI("can", "id=0x%03X len=%d %s", can_id, x.size(),
+                       format_hex_pretty(x).c_str());
