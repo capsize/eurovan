@@ -1,6 +1,6 @@
 # eurovan
 
-유로밴홈 캠핑카의 컨트롤 패널(난징 셰다 전기 南京协达电气 **Nova-23P-12V**)을 Waveshare 산업용 ESP32-S3 보드(RS485·CAN)에 연결해 아이폰으로 제어하는 프로젝트.
+[컴팩스알브이코리아 유로밴홈](http://www.compaksrv.co.kr/sub2/sub21.php)의 컨트롤 패널(난징 셰다 전기 南京协达电气 **Nova-23P-12V**)을 Waveshare 산업용 ESP32-S3 보드(RS485·CAN)에 연결해 아이폰으로 제어하는 프로젝트.
 
 ## 차량
 
