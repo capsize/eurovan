@@ -34,6 +34,7 @@
 | `esphome/secrets.yaml.example` | Wi-Fi 비밀번호 예시 (`secrets.yaml`로 복사해 사용, git에 올리지 않음) |
 | `docs/protocol.md` | 분석한 프로토콜 기록 |
 | `docs/wiring.html` | 단계별 인터랙티브 배선도 ([보기](https://claude.ai/artifact/QSS3ajDXHE48Naq5C5bWvg)) |
+| `docs/door-light.md` | 슬라이드 도어 열면 전등 켜기 (샤오미 BLE 문 센서) |
 | `docs/rs485.md` | RS485 기초: A/B, GND, RJ45와의 차이, 8가닥 판정 |
 | `docs/rv-c.md` | 캠핑카 표준 RV-C(CAN) 요약 |
 | `docs/research.md` | 셰다 전기·비슷한 패널 조사, CAN+ESP32 연결 사례 |
@@ -48,6 +49,7 @@
 - [x] Waveshare ESP32-S3-RS485-CAN 주문 (2026-11-26, [상품 링크](https://ko.aliexpress.com/item/1005012855109271.html))
 - [ ] 보드 도착 후 `esphome/rs485-sniff.yaml` 핀 번호 수정
 - [ ] RS485 엿듣기(9600bps부터) → 패킷 분석 → 아이폰 제어
+- [ ] (추가 기능) 슬라이드 도어 열면 전등 켜기 → [docs/door-light.md](docs/door-light.md)
 
 ## 진행 순서
 
