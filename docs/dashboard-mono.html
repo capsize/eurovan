@@ -1,0 +1,157 @@
+<title>Eurovan 리소 상태판</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+KR:wght@400;500;700&family=Nanum+Pen+Script&display=swap">
+<style>
+/* Layout: 리소그래프 두 도판 인쇄물 한 장. 왼쪽 2/3에 거대한 배터리 숫자 하나(초점), 오른쪽은 괘선 데이터 띠. 종이 여백 약 35%.
+   잉크 둘: 코발트(주 도판, 거의 전부) + 테라코타(맡은 일만: 켜진 것, 경보, 손글씨 메모). 종이는 잉크로 치지 않음. 인쇄물이라 밝은 면 하나로 고정. */
+:root{
+  color-scheme:light;
+  --paper:#FAFAF7; --a:#2148B8; --b:#C65F38;
+  --a-soft:rgba(33,72,184,.55); --a-faint:rgba(33,72,184,.18);
+  --f-disp:"Archivo","IBM Plex Sans KR",system-ui,sans-serif;
+  --f-kr:"IBM Plex Sans KR",system-ui,-apple-system,"Apple SD Gothic Neo",sans-serif;
+  --f-mono:"IBM Plex Mono","IBM Plex Sans KR",ui-monospace,Menlo,monospace;
+  --f-hand:"Nanum Pen Script","IBM Plex Sans KR",cursive;
+  --m:clamp(16px,6vw,110px);
+}
+html,body{height:100%}
+body{background:var(--paper);color:var(--a);font-family:var(--f-kr);font-size:clamp(13px,.85vw,19px);line-height:1.45;position:relative;overflow-x:hidden}
+/* 종이 결 */
+body::after{content:"";position:fixed;inset:0;pointer-events:none;opacity:.22;mix-blend-mode:multiply;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .13  0 0 0 0 .28  0 0 0 0 .72  0 0 0 .5 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>")}
+.page{box-sizing:border-box;min-height:100%;display:grid;grid-template-columns:minmax(0,1.9fr) minmax(0,1fr);grid-template-rows:auto minmax(0,1fr) auto;
+  column-gap:clamp(24px,4vw,90px);row-gap:clamp(14px,2vh,32px);
+  padding-block:clamp(16px,3.5vh,56px);padding-left:max(var(--m),env(safe-area-inset-left,0px));padding-right:max(var(--m),env(safe-area-inset-right,0px))}
+@media (min-width:1000px){.page{height:100%}}
+@media (max-width:999px){.page{grid-template-columns:minmax(0,1fr)}}
+
+/* 괘선 메타 띠 */
+.meta{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:4px 28px;font-family:var(--f-mono);font-size:.72em;letter-spacing:.08em;text-transform:uppercase;
+  border-top:1px solid var(--a);border-bottom:1px solid var(--a);padding:6px 0}
+.meta .b{color:var(--b)}
+.meta span:last-child{margin-left:auto}
+
+/* 초점: 배터리 */
+.focal{position:relative;display:flex;flex-direction:column;justify-content:flex-end;min-width:0}
+.rot{position:absolute;left:calc(-1 * clamp(14px,2.4vw,46px));top:0;transform:rotate(-90deg) translateX(-100%);transform-origin:top left;
+  font-family:var(--f-mono);font-size:.7em;letter-spacing:.16em;white-space:nowrap}
+.huge{position:relative;font-family:var(--f-disp);font-stretch:62%;font-weight:800;line-height:.78;font-size:min(46vh,24vw);letter-spacing:-.02em;font-variant-numeric:tabular-nums;margin:0}
+.huge span{display:block}
+.huge .under{position:absolute;left:0;top:0;color:var(--b);transform:translate(.035em,.02em)}
+.huge .over{position:relative;color:var(--a);mix-blend-mode:multiply}
+.huge sup{font-size:.28em;vertical-align:top;font-stretch:80%;margin-left:.04em}
+.say{font-family:var(--f-disp);font-stretch:75%;font-weight:600;font-size:clamp(20px,2.2vw,46px);line-height:1.05;margin:.35em 0 0;max-width:22ch}
+.say small{display:block;font-family:var(--f-mono);font-weight:400;font-size:.36em;letter-spacing:.06em;margin-top:.7em}
+.socrule{position:relative;height:14px;margin-top:18px;max-width:640px;
+  background-image:radial-gradient(var(--a) 42%,transparent 46%);background-size:6px 6px}
+.socrule::after{content:"";position:absolute;left:80%;right:0;top:0;bottom:0;background:var(--paper)}
+.socrule i{position:absolute;left:40%;top:-6px;bottom:-6px;border-left:2px solid var(--b)}
+.socrule em{position:absolute;left:40%;top:20px;font-family:var(--f-mono);font-style:normal;font-size:.62em;color:var(--b);transform:translateX(-50%)}
+.hand{position:absolute;font-family:var(--f-hand);color:var(--b);font-size:clamp(22px,2vw,40px);line-height:1;white-space:nowrap}
+
+/* 오른쪽 괘선 데이터 */
+.side{display:flex;flex-direction:column;gap:clamp(14px,2.2vh,30px);min-width:0}
+.strip h2{margin:0 0 4px;font-family:var(--f-mono);font-weight:500;font-size:.7em;letter-spacing:.14em;text-transform:uppercase;display:flex;justify-content:space-between}
+.strip h2 span{opacity:.6;letter-spacing:.04em;text-transform:none}
+.rows{border-top:2px solid var(--a)}
+.r{display:flex;align-items:baseline;gap:8px;padding:5px 0;border-bottom:1px solid var(--a-faint)}
+.r .k{flex:1}
+.r .v{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.r .v.b{color:var(--b)}
+.circ{position:relative}
+.circ svg{position:absolute;left:-14px;top:-9px;width:calc(100% + 28px);height:calc(100% + 18px);overflow:visible;pointer-events:none}
+
+.tanks{display:grid;grid-template-columns:1fr 1fr;gap:18px;padding-top:8px;border-top:2px solid var(--a)}
+.tk{display:grid;grid-template-columns:44px 1fr;gap:10px;align-items:end}
+.col{position:relative;height:clamp(80px,13vh,150px);border:1.5px solid var(--a)}
+.col i{position:absolute;left:0;right:0;bottom:0;background-image:radial-gradient(var(--a) 46%,transparent 50%);background-size:5px 5px}
+.col i.sparse{background-image:radial-gradient(var(--a) 28%,transparent 32%)}
+.col s{position:absolute;left:-6px;right:-6px;border-top:2px solid var(--b)}
+.tk .n{font-family:var(--f-disp);font-stretch:62%;font-weight:700;font-size:2.4em;line-height:.9}
+.tk .l{font-family:var(--f-mono);font-size:.66em;line-height:1.5}
+
+.sw{display:grid;grid-template-columns:1fr 1fr;column-gap:20px;border-top:2px solid var(--a)}
+.sw button{font:inherit;color:var(--a);background:none;border:0;border-bottom:1px solid var(--a-faint);padding:5px 0;display:flex;justify-content:space-between;align-items:center;cursor:pointer;text-align:left}
+.sw button .st{font-family:var(--f-mono);font-size:.78em;letter-spacing:.06em}
+.sw button[aria-pressed="true"]{color:var(--b)}
+.sw button[aria-pressed="true"] .st::before{content:"● "}
+.sw button:focus-visible{outline:2px solid var(--b);outline-offset:2px}
+
+/* 아래: 24시간 띠 */
+.day{grid-column:1/-1;display:grid;grid-template-columns:auto minmax(0,1fr);gap:16px;align-items:end;border-top:1px solid var(--a);padding-top:8px}
+.day h2{margin:0;font-family:var(--f-mono);font-weight:500;font-size:.7em;letter-spacing:.14em;text-transform:uppercase;line-height:1.6}
+.day svg{width:100%;height:clamp(60px,9vh,110px);display:block}
+.day text{font-family:var(--f-mono);font-size:10px;fill:var(--a)}
+.note{font-family:var(--f-mono);font-size:.62em;opacity:.7}
+</style>
+
+<div class="page">
+  <div class="meta">
+    <span>eurovan home</span><span>staria hybrid · compaks rv</span><span id="dt">2026.11.26</span><span class="b">주차 중</span><span>예시 값 · 시안</span>
+  </div>
+
+  <section class="focal" aria-label="배터리">
+    <div class="rot">BATTERY · 600 AH · TK15</div>
+    <p class="huge" aria-label="배터리 80퍼센트"><span class="under" aria-hidden="true">80<sup>%</sup></span><span class="over">80<sup>%</sup></span></p>
+    <p class="say">배터리 충전 중, 오늘 밤은 충분하다
+      <small>13.6 V · +11.8 A · 480 Ah 남음 · 가득까지 10.2 h</small></p>
+    <div class="socrule" aria-hidden="true"><i></i><em>경보 40%</em></div>
+    <span class="hand" style="right:4%;top:6%;transform:rotate(-6deg)">해 지기 전에<br>거의 다 참!</span>
+  </section>
+
+  <aside class="side">
+    <div class="strip">
+      <h2>전력 흐름<span>패널 · TK15</span></h2>
+      <div class="rows">
+        <div class="r"><span class="k">태양광 (520 W 패널)</span><span class="v">210 W</span></div>
+        <div class="r"><span class="k">주행충전</span><span class="v">0 A</span></div>
+        <div class="r"><span class="k">사용</span><span class="v">49 W</span></div>
+        <div class="r"><span class="k">인버터 3 kW</span><span class="v">꺼짐</span></div>
+        <div class="r circ"><span class="k">배터리로</span><span class="v b">+161 W</span>
+          <svg viewBox="0 0 100 30" preserveAspectRatio="none" aria-hidden="true"><path d="M70 4 C 92 2, 99 12, 96 20 C 92 29, 60 29, 58 18 C 57 9, 72 3, 86 5" fill="none" stroke="var(--b)" stroke-width="1.6" vector-effect="non-scaling-stroke" stroke-linecap="round"/></svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="strip">
+      <h2>물탱크<span>점선 = 경보</span></h2>
+      <div class="tanks">
+        <div class="tk"><div class="col"><i style="height:62%"></i><s style="bottom:30%"></s></div><div><div class="n">62%</div><div class="l">청수 60 L<br>약 37 L</div></div></div>
+        <div class="tk"><div class="col"><i class="sparse" style="height:35%"></i><s style="bottom:70%"></s></div><div><div class="n">35%</div><div class="l">오수 30 L<br>약 10.5 L</div></div></div>
+      </div>
+    </div>
+
+    <div class="strip">
+      <h2>스위치<span>실내 21.8°C · 냉장고 3.9°C · 도어 닫힘</span></h2>
+      <div class="sw" id="sw"></div>
+    </div>
+  </aside>
+
+  <section class="day" aria-label="최근 24시간 배터리 잔량">
+    <h2>최근<br>24시간</h2>
+    <div>
+      <svg id="bars" viewBox="0 0 1000 100" preserveAspectRatio="none"></svg>
+      <div class="note">막대 = 시간별 잔량 · 굵은 줄 = 경보 40% · 시안이라 버튼은 실제로 동작하지 않는다</div>
+    </div>
+  </section>
+</div>
+
+<script>
+(()=>{
+const d=new Date(),p=n=>String(n).padStart(2,'0');
+document.getElementById('dt').textContent=`${d.getFullYear()}.${p(d.getMonth()+1)}.${p(d.getDate())} · ${p(d.getHours())}:${p(d.getMinutes())}`;
+const SW=[['전원',1],['조명1',1],['조명2',0],['조명3',0],['천장등',0],['어닝등',0],['물펌프',1],['냉장고',1],['TV',1],['USB',1],['야간모드',0],['인버터',0]];
+const sw=document.getElementById('sw');
+SW.forEach(([n,on])=>{const b=document.createElement('button');b.setAttribute('aria-pressed',on?'true':'false');
+  const draw=()=>{b.innerHTML=`<span>${n}</span><span class="st">${b.getAttribute('aria-pressed')==='true'?'ON':'off'}</span>`};draw();
+  b.onclick=()=>{b.setAttribute('aria-pressed',b.getAttribute('aria-pressed')==='true'?'false':'true');draw()};sw.appendChild(b)});
+// 24시간 막대 (하프톤 대신 촘촘한 세로 막대)
+const pts=[86,85,84,83,82,81,80,79,78,78,79,82,86,90,93,95,96,95,93,90,87,84,82,80];
+const W=1000,H=100,B=14,bw=W/pts.length;let s='';
+pts.forEach((v,i)=>{const h=(H-B)*v/100;s+=`<rect x="${i*bw+bw*.18}" y="${H-B-h}" width="${bw*.64}" height="${h}" fill="var(--a)" opacity="${i===pts.length-1?1:.55}"/>`});
+const y40=(H-B)*(1-.4);s+=`<line x1="0" x2="${W}" y1="${y40}" y2="${y40}" stroke="var(--b)" stroke-width="2.5" vector-effect="non-scaling-stroke"/>`;
+['−24h','−18h','−12h','−6h','지금'].forEach((t,k)=>{s+=`<text x="${k===4?W-24:k*W/4+2}" y="${H-2}">${t}</text>`});
+document.getElementById('bars').innerHTML=s;
+})();
+</script>

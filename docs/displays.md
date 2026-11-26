@@ -8,8 +8,10 @@
 |---|---|---|
 | 어두운 계기판 (27인치 모니터, 밤용) | `docs/dashboard.html` | <https://claude.ai/artifact/HEcNzGpP6SVuRyze1JTEto> |
 | 흰 공학 도면 (inkworks 스타일, 차량 옆모습에 장치 표시) | `docs/dashboard-ink.html` | <https://claude.ai/artifact/1Nd1sA5E5yRMkAH7sanD6z> |
+| 리소 인쇄 (mono-color 스타일, 코발트·테라코타 2색) | `docs/dashboard-mono.html` | <https://claude.ai/artifact/Eotwm2fdNgcPDUJ9Evwozv> |
+| 밝은 디자인 캔버스 (모니터 + 아이폰 화면, 장면·스위치 동작) | — | <https://claude.ai/artifact/Cz6j9UqoHiQ8cGcponajCY> |
 
-예시 값이며 버튼은 동작하지 않는다.
+예시 값이다. 디자인 캔버스만 Play를 누르면 버튼이 동작한다(실제 장치와는 연결 안 됨).
 
 ### 대시보드에 올릴 것
 
