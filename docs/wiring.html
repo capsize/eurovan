@@ -8,7 +8,7 @@
   --bg:#e9eeeb; --panel:#fbfcfb; --ink:#18231f; --muted:#5a6a63; --line:#c6d0cb;
   --accent:#0d7a6a; --comp:#ffffff; --grid:#d9e1dd;
   --w12:#cf3627; --wgnd:#232c29; --wa:#de7a1c; --wb:#2d6cd3; --wcat:#93a09a;
-  --ok:#2a8a4a; --warn:#b7791f; --todo:#8a6bd1;
+  --ok:#2a8a4a; --warn:#b7791f; --todo:#8a6bd1; --wu:#8f8a0e;
   --f-body:"IBM Plex Sans KR",system-ui,-apple-system,"Apple SD Gothic Neo",sans-serif;
   --f-mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
 }
@@ -16,12 +16,12 @@
   --bg:#101614; --panel:#18201d; --ink:#e3eae6; --muted:#90a199; --line:#2c3833;
   --accent:#3cc0aa; --comp:#1f2926; --grid:#1b2421;
   --w12:#f05a4a; --wgnd:#b8c3be; --wa:#f39a45; --wb:#5d93f0; --wcat:#c3ccc8;
-  --ok:#58c27a; --warn:#e0a84a; --todo:#ad95f0; color-scheme:dark}}
+  --ok:#58c27a; --warn:#e0a84a; --todo:#ad95f0; --wu:#d8cd52; color-scheme:dark}}
 :root[data-theme="dark"]{
   --bg:#101614; --panel:#18201d; --ink:#e3eae6; --muted:#90a199; --line:#2c3833;
   --accent:#3cc0aa; --comp:#1f2926; --grid:#1b2421;
   --w12:#f05a4a; --wgnd:#b8c3be; --wa:#f39a45; --wb:#5d93f0; --wcat:#c3ccc8;
-  --ok:#58c27a; --warn:#e0a84a; --todo:#ad95f0; color-scheme:dark}
+  --ok:#58c27a; --warn:#e0a84a; --todo:#ad95f0; --wu:#d8cd52; color-scheme:dark}
 html,body{height:100%}
 body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.6}
 .wrap{display:flex;flex-direction:column;gap:12px;min-height:100%;box-sizing:border-box;
@@ -78,6 +78,7 @@ a{color:var(--accent)}
 .wire{fill:none;stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round}
 .flow{fill:none;stroke-width:3.2;stroke-linecap:round;stroke-dasharray:2 14;stroke:var(--panel);opacity:0}
 .w12{stroke:var(--w12)}.wgnd{stroke:var(--wgnd)}.wa{stroke:var(--wa)}.wb{stroke:var(--wb)}
+.wu{stroke:var(--wu)}.wq{stroke-dasharray:6 6}
 .wcat{stroke:var(--wcat);stroke-width:7}.wlan{stroke:var(--wcat);stroke-width:5}
 .wifi{fill:none;stroke:var(--accent);stroke-width:2.2;stroke-dasharray:4 5}
 .wlabel{font-family:var(--f-mono);font-size:10.5px;fill:var(--muted)}
@@ -121,6 +122,8 @@ a{color:var(--accent)}
           <rect x="660" y="570" width="60" height="20" rx="4" fill="var(--comp)" stroke="var(--w12)" stroke-width="1.6"/>
           <text class="wlabel" x="668" y="584">퓨즈 1~2A</text>
         </g>
+        <g data-step="7"><path class="wire wu" d="M115 300 V170"/><text class="wlabel" x="122" y="240">4선 (빨·검·초·노)</text>
+          <path class="wire wu wq" d="M300 410 H285 V265"/><text class="wlabel" x="232" y="300">USART</text></g>
         <g data-step="6"><path class="wifi" d="M895 296 C 890 270, 900 250, 905 236"/><path class="wifi" d="M880 300 C 870 270, 885 245, 892 236"/><path class="wifi" d="M910 300 C 915 270, 915 250, 918 236"/>
           <text class="wlabel" x="925" y="275">Wi-Fi</text></g>
 
@@ -136,7 +139,8 @@ a{color:var(--accent)}
           <rect class="box" x="300" y="300" width="260" height="230" rx="6"/>
           <text class="t" x="318" y="342">메인 제어 박스</text>
           <text class="s" x="318" y="362">퓨즈 · 릴레이 · 12개 출력</text>
-          <text class="s" x="318" y="380">CAN(미사용) · USART · SINGAL</text>
+          <text class="s" x="318" y="380">CAN(미사용) · SINGAL(빈칸)</text>
+          <rect class="port" x="296" y="402" width="10" height="16" rx="2"/><text class="pin" x="310" y="414">USART</text>
           <rect class="port" x="416" y="296" width="28" height="12" rx="2"/>
           <text class="pin" x="452" y="318">RS485 ① 사용 중</text>
           <rect class="port" x="550" y="392" width="12" height="18" rx="2"/>
@@ -169,6 +173,18 @@ a{color:var(--accent)}
           <text class="pin" x="880" y="330">120Ω 끔</text>
           <rect x="888" y="292" width="14" height="10" fill="var(--accent)"/>
         </g>
+        <g class="comp" data-part="tk15" data-step="7">
+          <rect class="box" x="40" y="60" width="170" height="110" rx="6"/>
+          <text class="t" x="56" y="92">TK15 표시창</text><text class="s" x="56" y="112">Juntek 적산계</text><text class="s" x="56" y="130">100% · 13.6V</text>
+        </g>
+        <g class="comp" data-part="shunt" data-step="7">
+          <rect class="box" x="60" y="300" width="110" height="50" rx="4"/>
+          <text class="t" x="72" y="322" font-size="13">TK15 션트</text><text class="s" x="72" y="339">배터리 옆 (추정)</text>
+        </g>
+        <g class="comp" data-part="usart" data-step="7">
+          <rect class="box" x="225" y="205" width="95" height="60" rx="4" style="stroke-dasharray:4 4"/>
+          <text class="t" x="237" y="230" font-size="13">? 장치</text><text class="s" x="237" y="248">BMS 추정</text>
+        </g>
         <g class="comp" data-part="phone" data-step="6">
           <rect class="box" x="860" y="70" width="90" height="166" rx="16"/>
           <rect x="870" y="92" width="70" height="120" rx="4" fill="var(--bg)" stroke="var(--line)"/>
@@ -199,6 +215,7 @@ a{color:var(--accent)}
         <span class="sw" style="background:var(--wa)"></span><span>RS485 A</span>
         <span class="sw" style="background:var(--wb)"></span><span>RS485 B</span>
         <span class="sw" style="background:var(--wcat)"></span><span>랜선 (RJ45, 8가닥)</span>
+        <span class="sw" style="background:var(--wu)"></span><span>TTL 시리얼 (TK15·USART, 점선은 미확인)</span>
         <span class="sw" style="background:var(--accent)"></span><span>Wi-Fi</span>
       </div>
       <div class="label">진행</div>
@@ -219,7 +236,7 @@ a{color:var(--accent)}
     <section class="pane" data-pane="circuit" hidden>
       <div class="steps-nav">
         <button id="prev">이전</button><button id="next">다음</button>
-        <span class="counter" id="counter">0/6</span>
+        <span class="counter" id="counter">0/7</span>
       </div>
       <div id="stepbody"></div>
     </section>
@@ -276,6 +293,9 @@ const PARTS={
  screen:{n:'Nova-23P-12V 화면',st:['설치됨','ok'],d:'南京协达电气 제품. 제어 박스에 RS485로 명령과 상태 요청을 보내는 쪽(마스터)으로 추정.'},
  tb:{n:'RJ45 단자대 케이블 (컴스 TB943)',st:['구매함','warn'],d:'RJ45 구멍 → 8핀 나사 단자, 1:1 연결. 오른쪽 끝이 1번. 먼저 8핀 전압을 재서 A·B·GND·12V를 찾고, 그대로 보드 연결에 쓴다.'},
  board:{n:'Waveshare ESP32-S3-RS485-CAN',st:['주문함','warn'],d:'7~36V 입력, 절연 RS485·CAN 나사 단자. 120Ω 종단 저항은 끈다(분기 지점이라 버스 끝이 아님). ESPHome으로 엿듣고 웹 화면을 띄운다.',l:'https://ko.aliexpress.com/item/1005012855109271.html'},
+ tk15:{n:'Juntek TK15 표시창',st:['설치됨','ok'],d:'뒷면 4선(빨강 +, 검정 GND, 초록·노랑 데이터)이 션트로 간다. TTL 시리얼이라 나중에 ESP32로 잔량·전압·전류를 읽을 수 있다(KH-F ESPHome 부품 참고). 화면 잔량(80%)과 달라 제어 박스와는 연결 안 된 것으로 추정.'},
+ shunt:{n:'TK15 션트 (전류 센서)',st:['위치 확인 필요','todo'],d:'배터리 − 쪽에 달린 전류 센서. TK15 4선 케이블이 여기로 가는지 따라가서 확인한다.'},
+ usart:{n:'USART에 연결된 장치',st:['확인 필요','todo'],d:'제어 박스 USART(TTL 시리얼, 4핀)에 테이프 감은 커넥터가 꽂혀 주름관으로 나간다. 리튬 배터리 BMS일 가능성이 높다. 선을 따라가 끝을 확인한다.'},
  phone:{n:'iPhone',st:['준비됨','ok'],d:'보드 Wi-Fi(Eurovan)에 붙어 Safari로 http://192.168.4.1 접속 → 홈 화면에 추가. 나중에 Home Assistant·HomeKit으로 넓힌다.'}};
 const pl=document.getElementById('partlist');
 for(const [k,p] of Object.entries(PARTS)){const li=document.createElement('li');li.dataset.part=k;li.tabIndex=0;
@@ -293,15 +313,16 @@ const STEPS=[
  {t:'3 · 빈 RS485 포트 → 단자대 케이블',b:`남는 RS485 포트에 랜선을 꽂아 선반 위 단자대 케이블로 끌어낸다. 멀티미터 V⎓20V, 검정 침 8번, 빨간 침 7→1번.${PIN}`},
  {t:'4 · 단자대 → 보드 RS485',b:'측정으로 찾은 A·B·GND 단자 3개만 보드 나사 단자로 잇는다. A/B가 바뀌면 고장은 안 나고 데이터만 깨지니 바꿔 본다. <b>12V 단자는 절대 A/B에 물리지 않는다.</b>'},
  {t:'5 · 보드 전원',b:'배터리 +12V → 퓨즈 1~2A → 보드 V+, GND → 보드 GND. 랜선 12V 핀을 쓸 수도 있지만 그때도 퓨즈를 거친다.'},
- {t:'6 · 보드 → 아이폰',b:'보드가 Wi-Fi AP(Eurovan)를 띄운다. 아이폰을 붙이고 Safari로 192.168.4.1 접속 → 공유 → 홈 화면에 추가. 처음엔 읽기만, 명령은 조명부터.'}];
+ {t:'6 · 보드 → 아이폰',b:'보드가 Wi-Fi AP(Eurovan)를 띄운다. 아이폰을 붙이고 Safari로 192.168.4.1 접속 → 공유 → 홈 화면에 추가. 처음엔 읽기만, 명령은 조명부터.'},
+ {t:'참고 · TK15와 USART',b:'<b>TK15</b>: 표시창 뒷면 4선(빨강 +, 검정 GND, 초록·노랑 데이터)이 배터리 옆 션트로 가는 것으로 추정. 화면 잔량 80%와 TK15 100%가 달라 제어 박스와는 따로 노는 듯하다. 나중에 ESP32로 직접 읽을 수 있다.<br><br><b>USART</b>: 제어 박스의 TTL 시리얼 포트(1:1, 짧은 거리). 연결된 장치는 확인 전(BMS 추정). 두 선 모두 따라가서 끝을 확인한다. ESP32에 물리기 전 신호가 3.3V인지 5V인지 잰다.'}];
 let step=0;const scene=document.getElementById('scene');
-function render(){document.getElementById('counter').textContent=`${step}/6`;
+function render(){document.getElementById('counter').textContent=`${step}/${STEPS.length-1}`;
   document.getElementById('stepbody').innerHTML=`<h2>${STEPS[step].t}</h2><p>${STEPS[step].b}</p>`;
   scene.classList.toggle('dim',step>0);
   scene.querySelectorAll('[data-step]').forEach(g=>g.classList.toggle('on',step>0&&g.dataset.step.split(' ').includes(String(step))));
-  document.getElementById('prev').disabled=step===0;document.getElementById('next').disabled=step===6}
+  document.getElementById('prev').disabled=step===0;document.getElementById('next').disabled=step===STEPS.length-1}
 document.getElementById('prev').onclick=()=>{step=Math.max(0,step-1);render()};
-document.getElementById('next').onclick=()=>{step=Math.min(6,step+1);render()};
+document.getElementById('next').onclick=()=>{step=Math.min(STEPS.length-1,step+1);render()};
 render();
 
 function showTab(n){document.querySelectorAll('.tab').forEach(t=>t.setAttribute('aria-selected',t.dataset.tab===n));
