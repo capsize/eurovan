@@ -1,0 +1,321 @@
+<title>Eurovan 패널 배선도</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: 왼쪽 움직이는 배선 도면 + 오른쪽 탭 패널(개요·부품·회로·계산), 폰에서는 위아래로 */
+:root{
+  --bg:#e9eeeb; --panel:#fbfcfb; --ink:#18231f; --muted:#5a6a63; --line:#c6d0cb;
+  --accent:#0d7a6a; --comp:#ffffff; --grid:#d9e1dd;
+  --w12:#cf3627; --wgnd:#232c29; --wa:#de7a1c; --wb:#2d6cd3; --wcat:#93a09a;
+  --ok:#2a8a4a; --warn:#b7791f; --todo:#8a6bd1;
+  --f-body:"IBM Plex Sans KR",system-ui,-apple-system,"Apple SD Gothic Neo",sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#101614; --panel:#18201d; --ink:#e3eae6; --muted:#90a199; --line:#2c3833;
+  --accent:#3cc0aa; --comp:#1f2926; --grid:#1b2421;
+  --w12:#f05a4a; --wgnd:#b8c3be; --wa:#f39a45; --wb:#5d93f0; --wcat:#c3ccc8;
+  --ok:#58c27a; --warn:#e0a84a; --todo:#ad95f0; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#101614; --panel:#18201d; --ink:#e3eae6; --muted:#90a199; --line:#2c3833;
+  --accent:#3cc0aa; --comp:#1f2926; --grid:#1b2421;
+  --w12:#f05a4a; --wgnd:#b8c3be; --wa:#f39a45; --wb:#5d93f0; --wcat:#c3ccc8;
+  --ok:#58c27a; --warn:#e0a84a; --todo:#ad95f0; color-scheme:dark}
+html,body{height:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.6}
+.wrap{display:flex;flex-direction:column;gap:12px;min-height:100%;box-sizing:border-box;
+  padding-block:14px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+header{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 14px}
+h1{font-size:1.25rem;margin:0;font-weight:700;letter-spacing:-.01em;text-wrap:balance}
+.sub{font-family:var(--f-mono);font-size:.75rem;color:var(--muted);letter-spacing:.04em;text-transform:uppercase}
+main{display:grid;grid-template-columns:minmax(0,1fr) 370px;gap:12px;flex:1;min-height:0}
+@media (max-width:860px){main{grid-template-columns:minmax(0,1fr)}}
+.stage{position:relative;background:var(--panel);border:1px solid var(--line);border-radius:10px;overflow:hidden;min-height:440px}
+svg#dia{width:100%;height:100%;display:block;touch-action:none;cursor:grab;min-height:440px}
+svg#dia.drag{cursor:grabbing}
+.hint{position:absolute;left:12px;bottom:10px;font-family:var(--f-mono);font-size:.7rem;color:var(--muted);pointer-events:none}
+.zoom{position:absolute;right:10px;top:10px;display:flex;gap:6px}
+button{font:inherit;color:var(--ink);background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:4px 10px;cursor:pointer}
+button:hover{border-color:var(--accent)}
+button:focus-visible,.tab:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.zoom button{font-family:var(--f-mono);min-width:34px}
+aside{background:var(--panel);border:1px solid var(--line);border-radius:10px;display:flex;flex-direction:column;min-width:0;overflow:hidden}
+.tabs{display:flex;border-bottom:1px solid var(--line)}
+.tab{flex:1;padding:10px 0;border:0;border-radius:0;background:none;color:var(--muted);font-weight:500;border-bottom:2px solid transparent}
+.tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
+.pane{padding:14px 16px;overflow:auto;flex:1}
+.pane h2{font-size:1rem;margin:0 0 6px}
+.pane p{margin:0 0 10px}
+.label{font-family:var(--f-mono);font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.steps-nav{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.counter{font-family:var(--f-mono);font-variant-numeric:tabular-nums;margin-left:auto;color:var(--muted)}
+.chip{display:inline-block;font-family:var(--f-mono);font-size:.68rem;padding:1px 7px;border-radius:99px;border:1px solid currentColor;white-space:nowrap}
+.c-ok{color:var(--ok)}.c-warn{color:var(--warn)}.c-todo{color:var(--todo)}
+.parts{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.parts li{display:grid;grid-template-columns:1fr auto;gap:2px 10px;padding:9px 0;border-bottom:1px solid var(--line);cursor:pointer}
+.parts li:hover strong{color:var(--accent)}
+.parts small{grid-column:1/-1;color:var(--muted);line-height:1.45}
+table{border-collapse:collapse;width:100%;font-size:.85rem}
+td,th{border-bottom:1px solid var(--line);padding:4px 6px;text-align:left}
+th{font-weight:500;color:var(--muted);font-size:.75rem}
+td.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.legend{display:grid;grid-template-columns:auto 1fr;gap:4px 10px;align-items:center;font-size:.85rem;margin:10px 0}
+.sw{width:26px;height:4px;border-radius:2px}
+.calc label{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:8px;font-size:.9rem}
+.calc input{width:96px;font:inherit;font-family:var(--f-mono);padding:3px 6px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink);text-align:right}
+.result{display:grid;grid-template-columns:1fr auto;gap:4px 10px;margin:12px 0;padding:10px 12px;background:var(--bg);border-radius:8px}
+.result b{font-family:var(--f-mono);font-variant-numeric:tabular-nums;text-align:right}
+.note{font-size:.8rem;color:var(--muted)}
+a{color:var(--accent)}
+/* SVG */
+.comp rect.box{fill:var(--comp);stroke:var(--ink);stroke-width:1.4}
+.comp text{fill:var(--ink);font-family:var(--f-body)}
+.comp .t{font-size:15px;font-weight:700}
+.comp .s{font-size:11px;fill:var(--muted);font-family:var(--f-mono)}
+.port{fill:var(--panel);stroke:var(--ink);stroke-width:1.2}
+.pin{font-family:var(--f-mono);font-size:10px;fill:var(--muted)}
+.wire{fill:none;stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round}
+.flow{fill:none;stroke-width:3.2;stroke-linecap:round;stroke-dasharray:2 14;stroke:var(--panel);opacity:0}
+.w12{stroke:var(--w12)}.wgnd{stroke:var(--wgnd)}.wa{stroke:var(--wa)}.wb{stroke:var(--wb)}
+.wcat{stroke:var(--wcat);stroke-width:7}.wlan{stroke:var(--wcat);stroke-width:5}
+.wifi{fill:none;stroke:var(--accent);stroke-width:2.2;stroke-dasharray:4 5}
+.wlabel{font-family:var(--f-mono);font-size:10.5px;fill:var(--muted)}
+.dot{fill:var(--ink)}
+.dim .comp,.dim .wire,.dim .wifi,.dim .wlabel,.dim .dot{opacity:.18;transition:opacity .25s}
+.dim .on,.dim .on .wire{opacity:1}
+.on .flow{opacity:.9;animation:flow 1s linear infinite}
+@keyframes flow{to{stroke-dashoffset:-16}}
+@media (prefers-reduced-motion:reduce){.on .flow{animation:none}}
+.comp.sel rect.box{stroke:var(--accent);stroke-width:2.6}
+.todo-tag rect{fill:none;stroke:var(--todo);stroke-dasharray:3 3}
+.todo-tag text{fill:var(--todo);font-family:var(--f-mono);font-size:10px}
+.gridline{stroke:var(--grid);stroke-width:1}
+</style>
+
+<div class="wrap">
+<header>
+  <h1>Eurovan 패널 배선도</h1>
+  <span class="sub">Nova-23P-12V · RS485 · ESP32-S3 · iPhone</span>
+</header>
+<main>
+  <div class="stage">
+    <svg id="dia" viewBox="0 0 1000 640" aria-label="캠핑카 패널과 ESP32 보드 배선도">
+      <defs>
+        <pattern id="g" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M20 0H0V20" class="gridline" fill="none"/></pattern>
+      </defs>
+      <rect x="-2000" y="-2000" width="5000" height="5000" fill="url(#g)"/>
+      <g id="scene">
+        <!-- 전선 -->
+        <g data-step="1"><path class="wire w12" d="M210 445 H300"/><path class="wire wgnd" d="M210 500 H300"/>
+          <text class="wlabel" x="226" y="437">+12V</text><text class="wlabel" x="226" y="518">GND</text></g>
+        <g data-step="2"><path class="wire wcat" d="M430 190 V300"/><text class="wlabel" x="440" y="250">CAT6 납작 랜선 (기존)</text></g>
+        <g data-step="3"><path class="wire wlan" d="M560 400 H640"/><text class="wlabel" x="566" y="392">랜선</text></g>
+        <g data-step="4">
+          <path class="wire wa" d="M770 352 H820"/><path class="wire wb" d="M770 377 H820"/><path class="wire wgnd" d="M770 402 H820"/>
+        </g>
+        <g data-step="5">
+          <path class="wire w12" d="M260 445 V580 H660 M720 580 H760 V470 H820"/>
+          <path class="wire wgnd" d="M240 500 V605 H790 V495 H820"/>
+          <circle class="dot" cx="260" cy="445" r="4"/><circle class="dot" cx="240" cy="500" r="4"/>
+          <rect x="660" y="570" width="60" height="20" rx="4" fill="var(--comp)" stroke="var(--w12)" stroke-width="1.6"/>
+          <text class="wlabel" x="668" y="584">퓨즈 1~2A</text>
+        </g>
+        <g data-step="6"><path class="wifi" d="M895 296 C 890 270, 900 250, 905 236"/><path class="wifi" d="M880 300 C 870 270, 885 245, 892 236"/><path class="wifi" d="M910 300 C 915 270, 915 250, 918 236"/>
+          <text class="wlabel" x="925" y="275">Wi-Fi</text></g>
+
+        <!-- 부품 -->
+        <g class="comp" data-part="battery" data-step="1 5">
+          <rect class="box" x="60" y="420" width="150" height="110" rx="6"/>
+          <text class="t" x="76" y="452">배터리</text><text class="s" x="76" y="472">12V · 600Ah</text>
+          <text class="s" x="76" y="490">(TK15 적산계)</text>
+          <circle class="port" cx="210" cy="445" r="5"/><circle class="port" cx="210" cy="500" r="5"/>
+          <text class="pin" x="192" y="440">+</text><text class="pin" x="192" y="515">−</text>
+        </g>
+        <g class="comp" data-part="box" data-step="1 2 3">
+          <rect class="box" x="300" y="300" width="260" height="230" rx="6"/>
+          <text class="t" x="318" y="342">메인 제어 박스</text>
+          <text class="s" x="318" y="362">퓨즈 · 릴레이 · 12개 출력</text>
+          <text class="s" x="318" y="380">CAN(미사용) · USART · SINGAL</text>
+          <rect class="port" x="416" y="296" width="28" height="12" rx="2"/>
+          <text class="pin" x="452" y="318">RS485 ① 사용 중</text>
+          <rect class="port" x="550" y="392" width="12" height="18" rx="2"/>
+          <text class="pin" x="452" y="423">RS485 ② 빈 포트</text>
+          <text class="pin" x="308" y="440">전원 +</text><text class="pin" x="308" y="497">전원 −</text>
+        </g>
+        <g class="comp" data-part="screen" data-step="2">
+          <rect class="box" x="330" y="60" width="200" height="130" rx="10"/>
+          <rect x="346" y="74" width="168" height="84" rx="4" fill="var(--bg)" stroke="var(--line)"/>
+          <text class="t" x="362" y="110">Nova-23P-12V</text><text class="s" x="362" y="130">화면 (마스터 추정)</text>
+          <rect class="port" x="416" y="182" width="28" height="12" rx="2"/>
+        </g>
+        <g class="comp" data-part="tb" data-step="3 4">
+          <rect class="box" x="640" y="330" width="130" height="90" rx="6"/>
+          <text class="t" x="652" y="318" font-size="12">RJ45 단자대 케이블</text>
+          <rect class="port" x="634" y="391" width="14" height="18" rx="2"/>
+          <g font-family="var(--f-mono)">
+            <text class="pin" x="700" y="356">A  → ?</text><text class="pin" x="700" y="381">B  → ?</text><text class="pin" x="700" y="406">GND→ ?</text>
+          </g>
+          <text class="s" x="652" y="356">8</text><text class="s" x="652" y="406">1</text>
+          <g class="todo-tag"><rect x="640" y="426" width="130" height="18" rx="3"/><text x="648" y="439">핀 번호 측정 대기</text></g>
+        </g>
+        <g class="comp" data-part="board" data-step="4 5 6">
+          <rect class="box" x="820" y="300" width="150" height="230" rx="6"/>
+          <text class="t" x="836" y="440">ESP32-S3</text><text class="s" x="836" y="458">RS485/CAN</text><text class="s" x="836" y="474">Waveshare</text>
+          <circle class="port" cx="820" cy="352" r="5"/><circle class="port" cx="820" cy="377" r="5"/><circle class="port" cx="820" cy="402" r="5"/>
+          <circle class="port" cx="820" cy="470" r="5"/><circle class="port" cx="820" cy="495" r="5"/>
+          <text class="pin" x="832" y="356">A</text><text class="pin" x="832" y="381">B</text><text class="pin" x="832" y="406">GND</text>
+          <text class="pin" x="832" y="499">V+ / GND</text>
+          <text class="pin" x="880" y="330">120Ω 끔</text>
+          <rect x="888" y="292" width="14" height="10" fill="var(--accent)"/>
+        </g>
+        <g class="comp" data-part="phone" data-step="6">
+          <rect class="box" x="860" y="70" width="90" height="166" rx="16"/>
+          <rect x="870" y="92" width="70" height="120" rx="4" fill="var(--bg)" stroke="var(--line)"/>
+          <text class="t" x="876" y="130" font-size="13">iPhone</text>
+          <text class="s" x="874" y="150">Safari</text><text class="s" x="874" y="166">192.168</text><text class="s" x="874" y="180">.4.1</text>
+        </g>
+      </g>
+    </svg>
+    <div class="zoom"><button id="zin" aria-label="확대">+</button><button id="zout" aria-label="축소">−</button><button id="zreset" aria-label="처음 보기로">⟲</button></div>
+    <div class="hint">드래그로 이동 · 스크롤·핀치로 확대 · 부품을 누르면 설명</div>
+  </div>
+
+  <aside>
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" data-tab="overview" aria-selected="true">개요</button>
+      <button class="tab" role="tab" data-tab="parts" aria-selected="false">부품</button>
+      <button class="tab" role="tab" data-tab="circuit" aria-selected="false">회로</button>
+      <button class="tab" role="tab" data-tab="calc" aria-selected="false">계산</button>
+    </div>
+
+    <section class="pane" data-pane="overview">
+      <div class="label">목표</div>
+      <h2>캠핑카 패널을 아이폰으로</h2>
+      <p>화면과 제어 박스는 랜선으로 <b>RS485</b> 통신을 한다. 제어 박스의 빈 RS485 포트에 ESP32 보드를 물려 대화를 엿듣고, 알아낸 명령을 보드가 대신 보내 아이폰 Safari에서 조명·펌프를 켜고 끈다.</p>
+      <div class="legend">
+        <span class="sw" style="background:var(--w12)"></span><span>+12V 전원</span>
+        <span class="sw" style="background:var(--wgnd)"></span><span>GND (0V 기준)</span>
+        <span class="sw" style="background:var(--wa)"></span><span>RS485 A</span>
+        <span class="sw" style="background:var(--wb)"></span><span>RS485 B</span>
+        <span class="sw" style="background:var(--wcat)"></span><span>랜선 (RJ45, 8가닥)</span>
+        <span class="sw" style="background:var(--accent)"></span><span>Wi-Fi</span>
+      </div>
+      <div class="label">진행</div>
+      <table>
+        <tr><td>통신 방식 확인 (RS485)</td><td><span class="chip c-ok">완료</span></td></tr>
+        <tr><td>연결 자리 (빈 RS485 포트)</td><td><span class="chip c-ok">완료</span></td></tr>
+        <tr><td>보드 주문</td><td><span class="chip c-ok">2026-11-26</span></td></tr>
+        <tr><td>8핀 전압 측정</td><td><span class="chip c-todo">대기</span></td></tr>
+        <tr><td>엿듣기 · 패킷 분석</td><td><span class="chip c-todo">대기</span></td></tr>
+        <tr><td>아이폰 제어</td><td><span class="chip c-todo">대기</span></td></tr>
+      </table>
+    </section>
+
+    <section class="pane" data-pane="parts" hidden>
+      <ul class="parts" id="partlist"></ul>
+    </section>
+
+    <section class="pane" data-pane="circuit" hidden>
+      <div class="steps-nav">
+        <button id="prev">이전</button><button id="next">다음</button>
+        <span class="counter" id="counter">0/6</span>
+      </div>
+      <div id="stepbody"></div>
+    </section>
+
+    <section class="pane calc" data-pane="calc" hidden>
+      <div class="label">보드 전력 소모</div>
+      <h2>배터리를 얼마나 쓰나</h2>
+      <label for="ma">보드 전류 @12V (mA)<input id="ma" type="number" min="1" value="120"></label>
+      <label for="ah">배터리 용량 (Ah)<input id="ah" type="number" min="1" value="600"></label>
+      <label for="hr">하루 켜 두는 시간 (h)<input id="hr" type="number" min="0" max="24" value="24"></label>
+      <div class="result">
+        <span>하루 소모</span><b id="r1"></b>
+        <span>배터리 대비</span><b id="r2"></b>
+        <span>10% 쓰는 데 걸리는 날</span><b id="r3"></b>
+        <span>소비 전력</span><b id="r4"></b>
+      </div>
+      <p class="note">120mA는 Wi-Fi를 켠 ESP32-S3를 12V로 돌릴 때의 대략값이다. 보드가 오면 TK15 전류 변화로 실제 값을 재서 넣는다.</p>
+      <div class="label" style="margin-top:14px">퓨즈 고르기</div>
+      <p class="note">보드는 0.3A 안팎이라 <b>1A 퓨즈</b>면 평소엔 안 끊어지고, 합선 땐 바로 끊어져 랜선과 보드를 지킨다. 2A까지 괜찮다. 10A 같은 큰 퓨즈는 가는 선이 먼저 탄다.</p>
+    </section>
+  </aside>
+</main>
+</div>
+
+<script>
+(()=>{
+const svg=document.getElementById('dia');
+const VB0={x:0,y:0,w:1000,h:640};let vb={...VB0};
+const setVB=()=>svg.setAttribute('viewBox',`${vb.x} ${vb.y} ${vb.w} ${vb.h}`);
+const toSvg=(cx,cy)=>{const r=svg.getBoundingClientRect();const s=Math.max(vb.w/r.width,vb.h/r.height);
+  return {x:vb.x+(cx-r.left-(r.width-vb.w/s)/2)*s,y:vb.y+(cy-r.top-(r.height-vb.h/s)/2)*s,s}};
+function zoom(f,cx,cy){const r=svg.getBoundingClientRect();if(cx==null){cx=r.left+r.width/2;cy=r.top+r.height/2}
+  const p=toSvg(cx,cy);const nw=Math.min(2400,Math.max(250,vb.w*f));const k=nw/vb.w;
+  vb={x:p.x-(p.x-vb.x)*k,y:p.y-(p.y-vb.y)*k,w:nw,h:vb.h*k};setVB()}
+svg.addEventListener('wheel',e=>{e.preventDefault();zoom(e.deltaY>0?1.12:1/1.12,e.clientX,e.clientY)},{passive:false});
+const pts=new Map();let last=null,lastDist=null,moved=0;
+svg.addEventListener('pointerdown',e=>{svg.setPointerCapture(e.pointerId);pts.set(e.pointerId,{x:e.clientX,y:e.clientY});moved=0;svg.classList.add('drag')});
+svg.addEventListener('pointermove',e=>{if(!pts.has(e.pointerId))return;const prev=pts.get(e.pointerId);pts.set(e.pointerId,{x:e.clientX,y:e.clientY});
+  if(pts.size===1){const s=toSvg(0,0).s;vb.x-=(e.clientX-prev.x)*s;vb.y-=(e.clientY-prev.y)*s;moved+=Math.abs(e.clientX-prev.x)+Math.abs(e.clientY-prev.y);setVB()}
+  else if(pts.size===2){const [a,b]=[...pts.values()];const d=Math.hypot(a.x-b.x,a.y-b.y);if(lastDist)zoom(lastDist/d,(a.x+b.x)/2,(a.y+b.y)/2);lastDist=d;moved+=10}});
+const up=e=>{pts.delete(e.pointerId);if(pts.size<2)lastDist=null;if(!pts.size)svg.classList.remove('drag')};
+svg.addEventListener('pointerup',up);svg.addEventListener('pointercancel',up);
+document.getElementById('zin').onclick=()=>zoom(1/1.25);document.getElementById('zout').onclick=()=>zoom(1.25);
+document.getElementById('zreset').onclick=()=>{vb={...VB0};setVB()};
+window.addEventListener('keydown',e=>{if(e.target.tagName==='INPUT')return;const s=vb.w*0.05;
+  ({w:()=>vb.y-=s,s:()=>vb.y+=s,a:()=>vb.x-=s,d:()=>vb.x+=s})[e.key]?.();if('wasd'.includes(e.key)&&e.key)setVB()});
+
+// 전류 흐름 표시용 겹선
+svg.querySelectorAll('.wire').forEach(p=>{const f=p.cloneNode();f.setAttribute('class','flow');p.after(f)});
+
+const PARTS={
+ battery:{n:'배터리',st:['설치됨','ok'],d:'12V, 설정값 600Ah. Juntek TK15 적산계로 잔량을 잰다. 보드 전원도 여기서 퓨즈를 거쳐 받는다.'},
+ box:{n:'메인 제어 박스',st:['설치됨','ok'],d:'퓨즈와 릴레이로 12개 출력을 켜고 끈다. RS485 RJ45 포트 2개(같은 버스로 추정) 중 하나는 화면, 하나는 비어 있다.'},
+ screen:{n:'Nova-23P-12V 화면',st:['설치됨','ok'],d:'南京协达电气 제품. 제어 박스에 RS485로 명령과 상태 요청을 보내는 쪽(마스터)으로 추정.'},
+ tb:{n:'RJ45 단자대 케이블 (컴스 TB943)',st:['구매함','warn'],d:'RJ45 구멍 → 8핀 나사 단자, 1:1 연결. 오른쪽 끝이 1번. 먼저 8핀 전압을 재서 A·B·GND·12V를 찾고, 그대로 보드 연결에 쓴다.'},
+ board:{n:'Waveshare ESP32-S3-RS485-CAN',st:['주문함','warn'],d:'7~36V 입력, 절연 RS485·CAN 나사 단자. 120Ω 종단 저항은 끈다(분기 지점이라 버스 끝이 아님). ESPHome으로 엿듣고 웹 화면을 띄운다.',l:'https://ko.aliexpress.com/item/1005012855109271.html'},
+ phone:{n:'iPhone',st:['준비됨','ok'],d:'보드 Wi-Fi(Eurovan)에 붙어 Safari로 http://192.168.4.1 접속 → 홈 화면에 추가. 나중에 Home Assistant·HomeKit으로 넓힌다.'}};
+const pl=document.getElementById('partlist');
+for(const [k,p] of Object.entries(PARTS)){const li=document.createElement('li');li.dataset.part=k;li.tabIndex=0;
+  li.innerHTML=`<strong>${p.n}</strong><span class="chip c-${p.st[1]}">${p.st[0]}</span><small>${p.d}${p.l?` <a href="${p.l}" target="_blank" rel="noopener">상품</a>`:''}</small>`;
+  li.onclick=()=>select(k);li.onkeydown=e=>{if(e.key==='Enter')select(k)};pl.appendChild(li)}
+function select(k){svg.querySelectorAll('.comp').forEach(c=>c.classList.toggle('sel',c.dataset.part===k))}
+svg.querySelectorAll('.comp').forEach(c=>c.addEventListener('click',()=>{if(moved>6)return;showTab('parts');select(c.dataset.part);
+  pl.querySelector(`[data-part="${c.dataset.part}"]`)?.scrollIntoView({block:'nearest'})}));
+
+const PIN=`<table style="margin-top:8px"><tr><th>단자</th><th>8번 기준 전압</th><th>판정</th></tr>${[1,2,3,4,5,6,7,8].map(i=>`<tr><td class="mono">${i}</td><td class="mono">${i===8?'기준':'—'}</td><td>${i===8?'GND?':'측정 대기'}</td></tr>`).join('')}</table>`;
+const STEPS=[
+ {t:'전체 보기',b:'다음을 누르면 한 단계씩 해당 선만 밝게 보이고 전류 흐름이 표시된다.'},
+ {t:'1 · 배터리 → 제어 박스',b:'12V 전원이 제어 박스로 들어간다. 빨강 +12V, 검정 GND. 이미 설치된 배선이라 손대지 않는다.'},
+ {t:'2 · 화면 ↔ 제어 박스 (기존 RS485 버스)',b:'화면 RJ45 ①과 제어 박스 RS485 포트를 흰색 CAT6 납작 랜선이 잇는다. 화면이 묻고 제어 박스가 답하는 대화가 이 선으로 오간다. 자르지 않는다.'},
+ {t:'3 · 빈 RS485 포트 → 단자대 케이블',b:`남는 RS485 포트에 랜선을 꽂아 선반 위 단자대 케이블로 끌어낸다. 멀티미터 V⎓20V, 검정 침 8번, 빨간 침 7→1번.${PIN}`},
+ {t:'4 · 단자대 → 보드 RS485',b:'측정으로 찾은 A·B·GND 단자 3개만 보드 나사 단자로 잇는다. A/B가 바뀌면 고장은 안 나고 데이터만 깨지니 바꿔 본다. <b>12V 단자는 절대 A/B에 물리지 않는다.</b>'},
+ {t:'5 · 보드 전원',b:'배터리 +12V → 퓨즈 1~2A → 보드 V+, GND → 보드 GND. 랜선 12V 핀을 쓸 수도 있지만 그때도 퓨즈를 거친다.'},
+ {t:'6 · 보드 → 아이폰',b:'보드가 Wi-Fi AP(Eurovan)를 띄운다. 아이폰을 붙이고 Safari로 192.168.4.1 접속 → 공유 → 홈 화면에 추가. 처음엔 읽기만, 명령은 조명부터.'}];
+let step=0;const scene=document.getElementById('scene');
+function render(){document.getElementById('counter').textContent=`${step}/6`;
+  document.getElementById('stepbody').innerHTML=`<h2>${STEPS[step].t}</h2><p>${STEPS[step].b}</p>`;
+  scene.classList.toggle('dim',step>0);
+  scene.querySelectorAll('[data-step]').forEach(g=>g.classList.toggle('on',step>0&&g.dataset.step.split(' ').includes(String(step))));
+  document.getElementById('prev').disabled=step===0;document.getElementById('next').disabled=step===6}
+document.getElementById('prev').onclick=()=>{step=Math.max(0,step-1);render()};
+document.getElementById('next').onclick=()=>{step=Math.min(6,step+1);render()};
+render();
+
+function showTab(n){document.querySelectorAll('.tab').forEach(t=>t.setAttribute('aria-selected',t.dataset.tab===n));
+  document.querySelectorAll('.pane').forEach(p=>p.hidden=p.dataset.pane!==n);
+  if(n!=='circuit'&&step){step=0;render()}if(n==='circuit'&&!step){step=1;render()}
+  try{localStorage.setItem('tab',n)}catch(e){}}
+document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>showTab(t.dataset.tab));
+
+const f=(x,d=1)=>x.toLocaleString('ko-KR',{maximumFractionDigits:d});
+function calc(){const ma=+document.getElementById('ma').value||0,ah=+document.getElementById('ah').value||1,hr=+document.getElementById('hr').value||0;
+  const day=ma/1000*hr;document.getElementById('r1').textContent=f(day,2)+' Ah';
+  document.getElementById('r2').textContent=f(day/ah*100,2)+' %';
+  document.getElementById('r3').textContent=day?f(ah*0.1/day)+' 일':'—';
+  document.getElementById('r4').textContent=f(ma/1000*12,2)+' W'}
+document.querySelectorAll('.calc input').forEach(i=>i.addEventListener('input',calc));calc();
+})();
+</script>
