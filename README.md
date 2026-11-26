@@ -18,6 +18,7 @@
 | `esphome/can-sniff.yaml` | 패널 버스가 CAN일 때 데이터 엿듣기 |
 | `esphome/secrets.yaml.example` | Wi-Fi 비밀번호 예시 (`secrets.yaml`로 복사해 사용, git에 올리지 않음) |
 | `docs/protocol.md` | 분석한 프로토콜 기록 |
+| `docs/rs485.md` | RS485 기초: A/B, GND, RJ45와의 차이, 8가닥 판정 |
 | `docs/rv-c.md` | 캠핑카 표준 RV-C(CAN) 요약 |
 | `docs/research.md` | 셰다 전기·비슷한 패널 조사, CAN+ESP32 연결 사례 |
 
