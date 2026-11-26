@@ -1,0 +1,276 @@
+<title>Eurovan 상태 도면</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&family=IBM+Plex+Sans+KR:wght@400;500;700&display=swap">
+<style>
+/* Layout: 흰 공학 도면 한 장. 테두리 구역 번호(1~8, A~E), 300px | 도면 | 280px, 도면 아래 24시간 차트.
+   카드·둥근 모서리·그림자 없이 2px 잉크 윗줄 블록. 색은 뜻 하나씩: 파랑=물, 황토=빛·태양, 빨강=강조·위험, 회색=꺼짐. 라이트 전용. */
+:root{
+  color-scheme:light;
+  --paper:#f8f9fb; --ink:#161b26; --ink-2:#4a5263; --ink-3:#8a93a3; --rule:#cfd6e0; --rule-soft:#e4e9f0;
+  --blue:#2f7de1; --ochre:#d98e04; --red:#e5482f; --grey:#7b8494;
+  --f-serif:"Instrument Serif","IBM Plex Sans KR",Georgia,serif;
+  --f-sans:"Geist","IBM Plex Sans KR",system-ui,-apple-system,sans-serif;
+  --f-mono:"Geist Mono","IBM Plex Sans KR",ui-monospace,Menlo,monospace;
+}
+html,body{height:100%}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-sans);font-size:clamp(13px,.82vw,19px);line-height:1.45;
+  background-image:linear-gradient(rgba(70,110,160,.11) 1px,transparent 1px),linear-gradient(90deg,rgba(70,110,160,.11) 1px,transparent 1px),
+  linear-gradient(rgba(70,110,160,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(70,110,160,.06) 1px,transparent 1px);
+  background-size:100px 100px,100px 100px,20px 20px,20px 20px}
+.sheet{position:relative;box-sizing:border-box;min-height:100%;padding-block:10px;padding-left:max(10px,env(safe-area-inset-left,0px));padding-right:max(10px,env(safe-area-inset-right,0px))}
+.frame{position:relative;border:1px solid var(--rule);min-height:calc(100vh - 20px);box-sizing:border-box;padding:18px}
+.inner{border:1.5px solid var(--ink);min-height:calc(100vh - 58px);box-sizing:border-box;display:grid;
+  grid-template-columns:300px minmax(0,1fr) 280px;grid-template-rows:auto minmax(0,1fr) auto;
+  grid-template-areas:"bar bar bar" "left stage right" "left chart right";background:var(--paper)}
+.zone{position:absolute;font-family:var(--f-mono);font-size:10px;color:var(--ink-3);display:flex;justify-content:space-around}
+.zone.t{top:2px;left:18px;right:18px}.zone.b{bottom:2px;left:18px;right:18px}
+.zone.l{left:4px;top:18px;bottom:18px;flex-direction:column;align-items:center}.zone.r{right:4px;top:18px;bottom:18px;flex-direction:column;align-items:center}
+
+.bar{grid-area:bar;display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px;padding:10px 16px;border-bottom:1.5px solid var(--ink)}
+.fig{font-family:var(--f-mono);font-size:.75em;background:var(--ink);color:var(--paper);padding:3px 8px;letter-spacing:.06em}
+.cap{font-family:var(--f-mono);font-size:.75em;color:var(--ink-2)}
+.layers{margin-left:auto;display:flex;gap:14px;flex-wrap:wrap}
+.cb{display:inline-flex;align-items:center;gap:6px;font-size:.82em;cursor:pointer;user-select:none}
+.cb input{appearance:none;width:13px;height:13px;border:1.5px solid var(--ink);margin:0;display:grid;place-content:center;cursor:pointer}
+.cb input:checked::after{content:"";width:7px;height:7px;background:var(--ink)}
+.cb input:focus-visible,button:focus-visible{outline:2px solid var(--red);outline-offset:2px}
+
+.left{grid-area:left;border-right:1px solid var(--rule);padding:18px 18px 16px;display:flex;flex-direction:column;gap:18px;min-width:0}
+.right{grid-area:right;border-left:1px solid var(--rule);padding:18px 18px 0;display:flex;flex-direction:column;gap:18px;min-width:0}
+h1{font-family:var(--f-serif);font-weight:400;font-size:2.6em;line-height:1.02;margin:0;letter-spacing:-.01em;text-wrap:balance}
+h1 em{color:var(--red)}
+.lede{color:var(--ink-2);margin:0;max-width:34ch}
+
+.blk{border-top:2px solid var(--ink);padding-top:8px;display:flex;flex-direction:column;gap:10px}
+.bh{display:flex;align-items:center;gap:8px;font-family:var(--f-mono);font-size:.72em;letter-spacing:.1em;text-transform:uppercase}
+.bh b{border:1.5px solid var(--ink);width:18px;height:18px;display:grid;place-content:center;font-weight:500;letter-spacing:0}
+.bh span{color:var(--ink-3);margin-left:auto;text-transform:none;letter-spacing:0}
+
+.big{display:flex;align-items:baseline;gap:10px}
+.big .n{font-family:var(--f-serif);font-style:italic;font-size:5.4em;line-height:.9}
+.big .u{font-family:var(--f-mono);color:var(--ink-3)}
+.big .tag{font-family:var(--f-serif);font-size:1.3em;margin-left:auto}
+.ro{display:grid;grid-template-columns:1fr auto;font-family:var(--f-mono);font-size:.85em;font-variant-numeric:tabular-nums}
+.ro>*{padding:5px 0;border-bottom:1px solid var(--rule-soft)}
+.ro dt{color:var(--ink-2)}.ro dd{margin:0;text-align:right}
+.socbar{position:relative;height:10px;border:1.5px solid var(--ink)}
+.socbar i{position:absolute;inset:0 auto 0 0;background:var(--ink)}
+.socbar s{position:absolute;top:-5px;bottom:-5px;width:0;border-left:1.5px solid var(--red)}
+.hint{font-size:.78em;color:var(--ink-3);margin:0}
+
+.stage{grid-area:stage;position:relative;min-height:340px;display:flex;flex-direction:column}
+.status{position:absolute;left:16px;top:12px;font-family:var(--f-mono);font-size:.75em;color:var(--ink-2);display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.status .chip{border:1.5px solid var(--ink);padding:1px 8px;color:var(--ink)}
+.stage svg{flex:1;width:100%;min-height:300px;display:block}
+.stage text{font-family:var(--f-mono)}
+.chart{grid-area:chart;border-top:1px solid var(--rule);padding:12px 16px 14px}
+.chart svg{width:100%;height:150px;display:block}
+.chart text{font-family:var(--f-mono);font-size:11px;fill:var(--ink-3)}
+
+/* 계기 */
+.gauge svg{width:100%;display:block}
+.gauge text{font-family:var(--f-mono)}
+.sw{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}
+.sw label{padding:5px 0;border-bottom:1px solid var(--rule-soft);justify-content:space-between;display:flex}
+.sw label.danger input:checked{border-color:var(--red)}.sw label.danger input:checked::after{background:var(--red)}
+.seg{display:flex}
+.seg button{flex:1;font:inherit;font-family:var(--f-mono);font-size:.78em;background:none;border:1.5px solid var(--ink);margin-left:-1.5px;padding:4px 0;cursor:pointer;color:var(--ink)}
+.seg button:first-child{margin-left:0}
+.seg button.on{background:var(--ink);color:var(--paper)}
+.tb{margin-top:auto;border-top:1.5px solid var(--ink);display:grid;grid-template-columns:auto 1fr;font-size:.78em}
+.tb>*{padding:5px 8px;border-bottom:1px solid var(--rule)}
+.tb dt{font-family:var(--f-mono);color:var(--ink-3);border-right:1px solid var(--rule);font-size:.9em}
+.tb dd{margin:0}
+.tb .ttl{grid-column:1/-1;font-family:var(--f-serif);font-size:1.6em;line-height:1.1;padding:8px}
+
+.co{transition:opacity .2s}
+.off-power .L-power,.off-water .L-water,.off-light .L-light,.off-sensor .L-sensor{opacity:0}
+
+@media (max-width:960px){
+  .inner{grid-template-columns:minmax(0,1fr);grid-template-areas:"bar" "stage" "chart" "left" "right";min-height:0}
+  .frame{min-height:0}.left,.right{border:0;border-top:1px solid var(--rule)}.right{padding-bottom:0}
+  .zone.l,.zone.r{display:none}
+}
+@media (max-height:820px) and (min-width:961px){body{font-size:12px}.hint{display:none}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="sheet"><div class="frame">
+  <div class="zone t"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span></div>
+  <div class="zone b"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span></div>
+  <div class="zone l"><span>A</span><span>B</span><span>C</span><span>D</span><span>E</span></div>
+  <div class="zone r"><span>A</span><span>B</span><span>C</span><span>D</span><span>E</span></div>
+
+  <div class="inner" id="inner">
+    <div class="bar">
+      <span class="fig">FIG. 1</span>
+      <span class="cap">유로밴홈 상태 도면 · 예시 값</span>
+      <div class="layers" aria-label="표시할 층">
+        <label class="cb"><input type="checkbox" id="ly-power" checked>전력</label>
+        <label class="cb"><input type="checkbox" id="ly-water" checked>물</label>
+        <label class="cb"><input type="checkbox" id="ly-light" checked>조명</label>
+        <label class="cb"><input type="checkbox" id="ly-sensor" checked>센서</label>
+      </div>
+    </div>
+
+    <section class="left">
+      <h1>유로밴홈이 <em>오늘 밤</em>을 버티는 법</h1>
+      <p class="lede">낮에 지붕 태양광이 배터리를 채우고, 밤에는 냉장고와 조명이 그 전기를 조금씩 꺼내 쓴다. 이 도면은 그 흐름을 한 장에 보여 준다.</p>
+
+      <div class="blk">
+        <div class="bh"><b>A</b>배터리<span>TK15 · 600Ah</span></div>
+        <div class="big"><span class="n">80</span><span class="u">%</span><span class="tag">“충전”</span></div>
+        <div class="socbar" aria-label="잔량 80%, 경보 40%"><i style="width:80%"></i><s style="left:40%"></s></div>
+        <dl class="ro">
+          <dt>전압</dt><dd>13.6 V</dd>
+          <dt>전류</dt><dd>+11.8 A</dd>
+          <dt>남은 용량</dt><dd>480 Ah</dd>
+          <dt>가득까지</dt><dd>10.2 h</dd>
+          <dt>저전력 경보</dt><dd style="color:var(--red)">40 %</dd>
+        </dl>
+        <p class="hint">빨간 세로선이 경보 기준이다. 검은 막대가 그 선에 닿으면 패널이 울린다.</p>
+      </div>
+
+      <div class="blk">
+        <div class="bh"><b>B</b>물탱크<span>패널</span></div>
+        <dl class="ro">
+          <dt style="color:var(--blue)">청수 60 L</dt><dd>62 % · 37 L</dd>
+          <dt style="color:var(--grey)">오수 30 L</dt><dd>35 % · 10.5 L</dd>
+          <dt>경보</dt><dd>청수 30 % · 오수 70 %</dd>
+        </dl>
+      </div>
+    </section>
+
+    <section class="stage">
+      <div class="status"><span>예시 값 · 주차 중 · <span id="clk">20:37</span></span><span class="chip">따라가는 장치 · 배터리 “충전”</span></div>
+      <svg viewBox="0 0 900 420" aria-label="유로밴홈 옆모습 도면과 장치 위치">
+        <!-- 차체 윤곽 (앞이 왼쪽) -->
+        <path d="M120 300 L120 190 Q125 150 170 120 L250 80 Q265 72 290 72 L760 72 Q790 72 792 100 L800 300 Z" fill="none" stroke="var(--ink)" stroke-width="2"/>
+        <path d="M165 135 L250 90 L300 90 L300 175 L150 175 Z" fill="rgba(141,188,242,.26)" stroke="var(--ink)" stroke-width="1.2"/>
+        <path d="M120 300 H800" stroke="var(--ink)" stroke-width="2"/>
+        <!-- 바퀴 + 빨간 타이밍 마크 -->
+        <g><circle cx="230" cy="305" r="38" fill="#eef1f5" stroke="var(--ink)" stroke-width="2"/><circle cx="230" cy="305" r="14" fill="none" stroke="var(--ink)"/><line x1="230" y1="267" x2="230" y2="281" stroke="var(--red)" stroke-width="3"/></g>
+        <g><circle cx="680" cy="305" r="38" fill="#eef1f5" stroke="var(--ink)" stroke-width="2"/><circle cx="680" cy="305" r="14" fill="none" stroke="var(--ink)"/><line x1="680" y1="267" x2="680" y2="281" stroke="var(--red)" stroke-width="3"/></g>
+        <!-- 슬라이드 도어 (유령선) -->
+        <rect x="330" y="95" width="150" height="200" fill="rgba(22,27,38,.035)" stroke="var(--ink)" stroke-dasharray="6 5"/>
+        <!-- 지붕 태양광 -->
+        <rect x="430" y="58" width="300" height="10" fill="#dde3ec" stroke="var(--ochre)" stroke-width="2"/>
+        <!-- 실내 장치 유령선 -->
+        <rect x="520" y="230" width="90" height="55" fill="rgba(22,27,38,.035)" stroke="var(--ink)" stroke-dasharray="5 4"/>
+        <rect x="620" y="250" width="70" height="35" fill="rgba(47,125,225,.12)" stroke="var(--blue)" stroke-dasharray="5 4"/>
+        <rect x="380" y="300" width="70" height="22" fill="rgba(123,132,148,.15)" stroke="var(--grey)" stroke-dasharray="5 4"/>
+        <rect x="700" y="130" width="60" height="110" fill="rgba(22,27,38,.035)" stroke="var(--ink)" stroke-dasharray="5 4"/>
+        <rect x="560" y="140" width="80" height="56" fill="#ffffff" stroke="var(--ink)"/>
+        <!-- 천장등 -->
+        <g id="lamps"><circle cx="400" cy="84" r="5"/><circle cx="560" cy="84" r="5"/><circle cx="680" cy="84" r="5"/></g>
+
+        <!-- 콜아웃: 풍선 번호 + 점선 지시선 -->
+        <g class="co L-power">
+          <line x1="580" y1="63" x2="600" y2="22" stroke="var(--ink)" stroke-dasharray="3 3"/><circle cx="600" cy="18" r="9" fill="var(--paper)" stroke="var(--ink)"/><text x="600" y="22" font-size="10" text-anchor="middle">1</text>
+          <text x="614" y="22" font-size="12" fill="var(--ink)">태양광 520 W · 지금 210 W</text>
+          <line x1="565" y1="258" x2="520" y2="365" stroke="var(--ink)" stroke-dasharray="3 3"/><circle cx="520" cy="372" r="9" fill="var(--paper)" stroke="var(--ink)"/><text x="520" y="376" font-size="10" text-anchor="middle">2</text>
+          <text x="534" y="376" font-size="12" fill="var(--ink)">배터리·제어 박스 · 80 %</text>
+        </g>
+        <g class="co L-water">
+          <line x1="655" y1="268" x2="760" y2="365" stroke="var(--blue)" stroke-dasharray="3 3"/><circle cx="766" cy="372" r="9" fill="var(--paper)" stroke="var(--blue)"/><text x="766" y="376" font-size="10" text-anchor="middle" fill="var(--blue)">3</text>
+          <text x="780" y="376" font-size="12" fill="var(--blue)">청수 62 %</text>
+          <line x1="415" y1="322" x2="360" y2="372" stroke="var(--grey)" stroke-dasharray="3 3"/><circle cx="352" cy="378" r="9" fill="var(--paper)" stroke="var(--grey)"/><text x="352" y="382" font-size="10" text-anchor="middle" fill="var(--grey)">4</text>
+          <text x="250" y="402" font-size="12" fill="var(--grey)">오수 35 %</text>
+        </g>
+        <g class="co L-light">
+          <line x1="400" y1="89" x2="350" y2="40" stroke="var(--ochre)" stroke-dasharray="3 3"/><circle cx="344" cy="34" r="9" fill="var(--paper)" stroke="var(--ochre)"/><text x="344" y="38" font-size="10" text-anchor="middle" fill="var(--ochre)">5</text>
+          <text x="220" y="38" font-size="12" fill="var(--ochre)">조명1 켜짐</text>
+        </g>
+        <g class="co L-sensor">
+          <line x1="480" y1="200" x2="520" y2="200" stroke="var(--ink)" stroke-dasharray="3 3"/><circle cx="528" cy="200" r="9" fill="var(--paper)" stroke="var(--ink)"/><text x="528" y="204" font-size="10" text-anchor="middle">6</text>
+          <text x="330" y="88" font-size="11" fill="var(--ink-2)">슬라이드 도어 · 닫힘</text>
+          <line x1="600" y1="168" x2="600" y2="168"/><text x="566" y="172" font-size="11" fill="var(--ink-2)">냉장고 3.9°C</text>
+          <text x="706" y="190" font-size="11" fill="var(--ink-2)">21.8°C</text><text x="706" y="206" font-size="11" fill="var(--ink-2)">46 %</text>
+        </g>
+        <text x="130" y="410" font-size="10" fill="var(--ink-3)">옆모습 · 축척 없음 · 앞 ←</text>
+      </svg>
+    </section>
+
+    <section class="chart">
+      <div class="blk">
+        <div class="bh"><b>C</b>배터리 잔량 · 24시간<span>예시 값</span></div>
+        <svg id="spark" viewBox="0 0 1000 150" preserveAspectRatio="none" aria-label="배터리 잔량 24시간 그래프"></svg>
+      </div>
+    </section>
+
+    <section class="right">
+      <div class="blk gauge">
+        <div class="bh"><b>D</b>전력 계기<span>W</span></div>
+        <svg viewBox="0 0 240 140" aria-label="배터리로 들어가는 전력 +161W">
+          <path d="M30 120 A90 90 0 0 1 210 120" fill="none" stroke="var(--ink)" stroke-width="1.5"/>
+          <path d="M30 120 A90 90 0 0 1 48 66" fill="none" stroke="var(--red)" stroke-width="4"/>
+          <g id="ticks"></g>
+          <line id="needle" x1="120" y1="120" x2="120" y2="42" stroke="var(--red)" stroke-width="2.5"/>
+          <circle cx="120" cy="120" r="6" fill="var(--ink)"/>
+          <text x="120" y="100" font-size="20" text-anchor="middle" fill="var(--ink)">+161</text>
+          <text x="22" y="136" font-size="9" fill="var(--ink-3)">−500</text><text x="206" y="136" font-size="9" fill="var(--ink-3)">+500</text>
+        </svg>
+        <dl class="ro"><dt style="color:var(--ochre)">태양광</dt><dd>210 W</dd><dt>주행충전</dt><dd>0 A</dd><dt>사용</dt><dd>49 W</dd><dt style="color:var(--red)">인버터</dt><dd>꺼짐</dd></dl>
+      </div>
+
+      <div class="blk">
+        <div class="bh"><b>E</b>스위치<span>패널 RS485</span></div>
+        <div class="sw" id="sw"></div>
+        <div class="seg" role="group" aria-label="어닝등 밝기"><button>25</button><button>50</button><button>75</button><button class="on">100</button></div>
+        <p class="hint">어닝등 밝기 %. 시안이라 실제로 켜지지 않는다.</p>
+      </div>
+
+      <dl class="tb">
+        <dd class="ttl">유로밴홈 상태 도면</dd>
+        <dt>차량</dt><dd>스타리아 하이브리드 인스퍼레이션</dd>
+        <dt>제작</dt><dd>컴팩스알브이코리아</dd>
+        <dt>패널</dt><dd>Nova-23P-12V · RS485</dd>
+        <dt>날짜</dt><dd id="tbdate">2026-11-26</dd>
+        <dt>시트</dt><dd>1 / 1 · 축척 없음</dd>
+      </dl>
+    </section>
+  </div>
+</div></div>
+
+<script>
+(()=>{
+const pad=n=>String(n).padStart(2,'0');
+const d=new Date();document.getElementById('clk').textContent=`${pad(d.getHours())}:${pad(d.getMinutes())}`;
+document.getElementById('tbdate').textContent=`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+
+// 층 켜고 끄기
+const inner=document.getElementById('inner');
+['power','water','light','sensor'].forEach(k=>{const c=document.getElementById('ly-'+k);c.onchange=()=>inner.classList.toggle('off-'+k,!c.checked)});
+
+// 스위치 12개
+const SW=[['전원',1],['조명1',1],['조명2',0],['조명3',0],['천장등',0],['어닝등',0],['물펌프',1],['냉장고',1],['TV',1],['USB',1],['야간모드',0],['인버터',0,1]];
+const sw=document.getElementById('sw');
+SW.forEach(([n,on,danger],i)=>{const l=document.createElement('label');l.className='cb'+(danger?' danger':'');
+  l.innerHTML=`<span>${n}</span><input type="checkbox" id="sw${i}" ${on?'checked':''}>`;sw.appendChild(l)});
+// 천장등·조명 상태를 도면 램프에 반영 (황토 = 빛)
+const lamps=[...document.querySelectorAll('#lamps circle')];
+function lampDraw(){const on=[1,4,5].map(i=>document.getElementById('sw'+i).checked);
+  lamps.forEach((c,k)=>{const o=on[k];c.setAttribute('fill',o?'var(--ochre)':'var(--paper)');c.setAttribute('stroke',o?'var(--ochre)':'var(--ink)')})}
+sw.addEventListener('change',lampDraw);lampDraw();
+document.querySelectorAll('.seg button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.seg button').forEach(x=>x.classList.toggle('on',x===b))});
+
+// 계기 눈금, 바늘 (−500~+500W)
+let t='';for(let v=-500;v<=500;v+=100){const a=Math.PI*(1-(v+500)/1000);const x1=120+90*Math.cos(a),y1=120-90*Math.sin(a),x2=120+(v%500?82:76)*Math.cos(a),y2=120-(v%500?82:76)*Math.sin(a);
+  t+=`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="var(--ink)" stroke-width="1.2"/>`}
+document.getElementById('ticks').innerHTML=t;
+const a=Math.PI*(1-(161+500)/1000);const nd=document.getElementById('needle');nd.setAttribute('x2',120+78*Math.cos(a));nd.setAttribute('y2',120-78*Math.sin(a));
+
+// 24시간 차트
+const pts=[86,85,84,83,82,81,80,79,78,78,79,82,86,90,93,95,96,95,93,90,87,84,82,80];
+const W=1000,H=150,L=40,B=22,T=8,x=i=>L+(W-L-10)*i/(pts.length-1),y=v=>T+(H-T-B)*(1-v/100);
+let s='';[0,50,100].forEach(v=>{s+=`<line x1="${L}" x2="${W}" y1="${y(v)}" y2="${y(v)}" stroke="var(--rule)"/><text x="4" y="${y(v)+4}">${v}%</text>`});
+s+=`<line x1="${L}" x2="${W}" y1="${y(40)}" y2="${y(40)}" stroke="var(--red)" stroke-dasharray="5 4"/><text x="${W-72}" y="${y(40)-5}" style="fill:var(--red)">경보 40%</text>`;
+// 낮(태양광) 구간 황토 띠
+s+=`<rect x="${x(10)}" y="${T}" width="${x(19)-x(10)}" height="${H-T-B}" fill="rgba(217,142,4,.08)"/><text x="${x(10)+6}" y="${T+14}" style="fill:var(--ochre)">태양광</text>`;
+s+=`<path d="${pts.map((v,i)=>`${i?'L':'M'}${x(i)} ${y(v)}`).join(' ')}" fill="none" stroke="var(--ink)" stroke-width="1.8" vector-effect="non-scaling-stroke"/>`;
+s+=`<circle cx="${x(pts.length-1)}" cy="${y(80)}" r="4.5" fill="var(--red)"/>`;
+['-24h','-18h','-12h','-6h','지금'].forEach((tx,k)=>{s+=`<text x="${L+(W-L-10)*k/4-(k===4?26:k?14:0)}" y="${H-5}">${tx}</text>`});
+document.getElementById('spark').innerHTML=s;
+})();
+</script>

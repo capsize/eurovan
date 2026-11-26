@@ -1,0 +1,239 @@
+<title>Eurovan 상태판</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;700&family=Saira+Semi+Condensed:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: 27인치(1920×1080) 한 화면에 맞춘 계기판. 왼쪽 큰 배터리, 오른쪽 위 탱크·에너지·환경, 아래 스위치 12개, 맨 아래 24시간 그래프.
+   밤에 차 안에서 보는 화면이라 어두운 색 하나로 고정. 켜진 조명은 실내등 같은 호박색. */
+:root{
+  color-scheme:dark;
+  --bg:#0b1312; --surface:#121c1a; --surface2:#182522; --line:#23332f;
+  --ink:#e4ede8; --muted:#86998f; --faint:#4c5d56;
+  --lamp:#f3b445; --water:#4aa6de; --grey:#a8905c; --good:#5ec98c; --warn:#f0a040; --crit:#ef5b4b;
+  --f-body:"IBM Plex Sans KR",system-ui,-apple-system,"Apple SD Gothic Neo",sans-serif;
+  --f-num:"Saira Semi Condensed","IBM Plex Sans KR",system-ui,sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+  --gap:clamp(8px,0.8vw,16px);
+}
+html,body{height:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:clamp(14px,0.95vw,22px);line-height:1.4}
+.app{box-sizing:border-box;min-height:100%;display:grid;gap:var(--gap);
+  grid-template-columns:minmax(0,1.15fr) repeat(3,minmax(0,1fr));
+  grid-template-rows:auto minmax(0,1fr) minmax(0,1.05fr) minmax(0,.55fr);
+  grid-template-areas:"top top top top" "bat tank energy env" "bat sw sw sw" "chart chart chart chart";
+  padding-block:var(--gap);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+@media (min-width:1000px){.app{height:100%}}
+@media (max-width:999px){.app{grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-rows:none;
+  grid-template-areas:"top top" "bat bat" "tank energy" "env env" "sw sw" "chart chart"}}
+@media (max-width:560px){.app{grid-template-columns:minmax(0,1fr);grid-template-areas:"top" "bat" "tank" "energy" "env" "sw" "chart"}}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:clamp(12px,1vw,22px);min-width:0;display:flex;flex-direction:column;gap:.6em}
+.h{display:flex;align-items:baseline;justify-content:space-between;gap:8px}
+.h h2{margin:0;font-size:.8em;font-weight:500;color:var(--muted);letter-spacing:.06em}
+.src{font-family:var(--f-mono);font-size:.62em;color:var(--faint)}
+.num{font-family:var(--f-num);font-weight:600;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+.unit{font-family:var(--f-mono);font-size:.45em;color:var(--muted);margin-left:.2em;font-weight:400}
+
+/* 상단 */
+.top{grid-area:top;display:flex;flex-wrap:wrap;align-items:center;gap:8px 20px}
+.brand{font-family:var(--f-num);font-weight:700;font-size:1.5em;letter-spacing:.08em}
+.brand small{font-family:var(--f-body);font-weight:400;font-size:.5em;color:var(--muted);letter-spacing:0;margin-left:.6em}
+.clock{font-family:var(--f-num);font-size:1.5em;font-variant-numeric:tabular-nums;margin-left:auto}
+.date{color:var(--muted);font-size:.85em}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{font-family:var(--f-mono);font-size:.68em;padding:3px 10px;border-radius:99px;border:1px solid var(--line);color:var(--muted);display:inline-flex;align-items:center;gap:6px}
+.chip i{width:7px;height:7px;border-radius:50%;background:var(--good)}
+.chip.sample{border-color:var(--warn);color:var(--warn)}
+
+/* 배터리 */
+.bat{grid-area:bat}
+.gauge{position:relative;width:min(100%,19em);margin:0 auto;aspect-ratio:1;max-width:100%}
+.gauge svg{width:100%;height:100%;display:block}
+.gauge .c{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.gauge .pct{font-size:4.6em;line-height:1}
+.gauge .pct .unit{font-size:.35em}
+.gauge .sub{color:var(--muted);font-size:.85em}
+.kv{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.7em 1em;margin-top:auto}
+.kv div{display:flex;flex-direction:column}
+.kv span{color:var(--muted);font-size:.72em}
+.kv b{font-size:1.6em}
+.charging{color:var(--good)}
+
+/* 탱크 */
+.tank{grid-area:tank}
+.tanks{display:grid;grid-template-columns:1fr 1fr;gap:1em;flex:1;min-height:0}
+.tk{display:grid;grid-template-rows:auto minmax(4em,1fr) auto;gap:.4em;justify-items:center}
+.tk .name{font-size:.8em;color:var(--muted)}
+.vessel{position:relative;width:min(5.5em,70%);height:100%;border:2px solid var(--faint);border-radius:8px;overflow:hidden;background:var(--surface2)}
+.vessel .fill{position:absolute;left:0;right:0;bottom:0}
+.vessel .alarm{position:absolute;left:-2px;right:-2px;border-top:2px dashed var(--warn)}
+.vessel .alarm span{position:absolute;right:4px;top:2px;font-family:var(--f-mono);font-size:.55em;color:var(--warn)}
+.tk .v{font-size:1.9em;line-height:1}
+.tk .l{font-family:var(--f-mono);font-size:.62em;color:var(--muted)}
+
+/* 에너지 */
+.energy{grid-area:energy}
+.flow{display:flex;flex-direction:column;gap:.7em;flex:1;justify-content:center}
+.row{display:grid;grid-template-columns:5.2em 1fr auto;align-items:center;gap:.6em}
+.row .lb{font-size:.8em;color:var(--muted)}
+.bar{height:.55em;background:var(--surface2);border-radius:99px;overflow:hidden}
+.bar i{display:block;height:100%;border-radius:99px}
+.row b{font-size:1.35em;text-align:right;min-width:4.2em}
+.net{border-top:1px solid var(--line);padding-top:.6em;display:flex;justify-content:space-between;align-items:baseline}
+.net b{font-size:1.8em}
+
+/* 환경 */
+.env{grid-area:env}
+.envs{display:grid;grid-template-columns:1fr 1fr;gap:.8em 1em;flex:1;align-content:center}
+.envs div{display:flex;flex-direction:column}
+.envs span{font-size:.72em;color:var(--muted)}
+.envs b{font-size:1.8em;line-height:1.1}
+.door{grid-column:1/-1;display:flex!important;flex-direction:row!important;align-items:center;gap:.7em;padding:.55em .8em;border-radius:8px;background:var(--surface2)}
+.door .st{font-weight:700}
+.door .dot{width:.7em;height:.7em;border-radius:50%;background:var(--good);flex:none}
+
+/* 스위치 */
+.sw{grid-area:sw}
+.grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:var(--gap);flex:1;min-height:0}
+@media (max-width:999px){.grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media (max-width:560px){.grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.s{font:inherit;color:var(--ink);background:var(--surface2);border:1px solid var(--line);border-radius:10px;padding:.7em .8em;
+  display:flex;flex-direction:column;justify-content:space-between;align-items:flex-start;gap:.5em;cursor:pointer;text-align:left;min-height:4.6em}
+.s .n{font-weight:700;font-size:1.05em}
+.s .st{font-family:var(--f-mono);font-size:.65em;color:var(--muted);display:flex;align-items:center;gap:6px}
+.s .st i{width:.65em;height:.65em;border-radius:50%;background:var(--faint)}
+.s[aria-pressed="true"]{border-color:color-mix(in srgb,var(--lamp) 60%,transparent);background:color-mix(in srgb,var(--lamp) 14%,var(--surface2))}
+.s[aria-pressed="true"] .st{color:var(--lamp)}
+.s[aria-pressed="true"] .st i{background:var(--lamp);box-shadow:0 0 10px var(--lamp)}
+.s.danger[aria-pressed="true"]{border-color:color-mix(in srgb,var(--crit) 60%,transparent);background:color-mix(in srgb,var(--crit) 12%,var(--surface2))}
+.s.danger[aria-pressed="true"] .st{color:var(--crit)}.s.danger[aria-pressed="true"] .st i{background:var(--crit);box-shadow:0 0 10px var(--crit)}
+.s:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
+.s:hover{border-color:var(--muted)}
+
+/* 그래프 */
+.chart{grid-area:chart}
+.chart svg{width:100%;flex:1;min-height:7em;display:block}
+.chart text{font-family:var(--f-mono);font-size:11px;fill:var(--muted)}
+.foot{font-size:.65em;color:var(--faint)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="app">
+  <header class="top">
+    <div class="brand">EUROVAN HOME<small>스타리아 하이브리드 · 컴팩스알브이</small></div>
+    <div class="chips">
+      <span class="chip"><i></i>패널 RS485</span>
+      <span class="chip"><i></i>TK15</span>
+      <span class="chip"><i></i>도어 센서</span>
+      <span class="chip sample">시안 · 예시 값</span>
+    </div>
+    <div class="clock" id="clock">20:37</div>
+    <div class="date" id="date"></div>
+  </header>
+
+  <section class="card bat" aria-label="배터리">
+    <div class="h"><h2>배터리</h2><span class="src">TK15 · 600Ah</span></div>
+    <div class="gauge">
+      <svg viewBox="0 0 200 200" aria-hidden="true">
+        <circle cx="100" cy="100" r="84" fill="none" stroke="var(--surface2)" stroke-width="14"/>
+        <circle cx="100" cy="100" r="84" fill="none" stroke="var(--good)" stroke-width="14" stroke-linecap="round"
+          stroke-dasharray="422.2 527.8" transform="rotate(-90 100 100)"/>
+        <!-- 저전력 경보 40% 눈금 -->
+        <line x1="100" y1="10" x2="100" y2="24" stroke="var(--warn)" stroke-width="3" transform="rotate(144 100 100)"/>
+      </svg>
+      <div class="c">
+        <div class="pct num">80<span class="unit">%</span></div>
+        <div class="sub charging">▲ 충전 중</div>
+        <div class="sub">경보 40%</div>
+      </div>
+    </div>
+    <div class="kv">
+      <div><span>전압</span><b class="num">13.6<span class="unit">V</span></b></div>
+      <div><span>전류</span><b class="num charging">+11.8<span class="unit">A</span></b></div>
+      <div><span>남은 용량</span><b class="num">480<span class="unit">Ah</span></b></div>
+      <div><span>가득까지</span><b class="num">10.2<span class="unit">h</span></b></div>
+    </div>
+  </section>
+
+  <section class="card tank" aria-label="물탱크">
+    <div class="h"><h2>물탱크</h2><span class="src">패널</span></div>
+    <div class="tanks">
+      <div class="tk">
+        <span class="name">청수 60L</span>
+        <div class="vessel"><div class="fill" style="height:62%;background:var(--water)"></div><div class="alarm" style="bottom:30%"><span>30%</span></div></div>
+        <div class="v num">62<span class="unit">%</span></div><span class="l">약 37 L</span>
+      </div>
+      <div class="tk">
+        <span class="name">오수 30L</span>
+        <div class="vessel"><div class="fill" style="height:35%;background:var(--grey)"></div><div class="alarm" style="bottom:70%"><span>70%</span></div></div>
+        <div class="v num">35<span class="unit">%</span></div><span class="l">약 10.5 L</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="card energy" aria-label="전력">
+    <div class="h"><h2>전력 흐름</h2><span class="src">패널 · TK15</span></div>
+    <div class="flow">
+      <div class="row"><span class="lb">태양광</span><div class="bar"><i style="width:40%;background:var(--lamp)"></i></div><b class="num">210<span class="unit">W</span></b></div>
+      <div class="row"><span class="lb">주행충전</span><div class="bar"><i style="width:0%;background:var(--good)"></i></div><b class="num">0<span class="unit">A</span></b></div>
+      <div class="row"><span class="lb">사용</span><div class="bar"><i style="width:9%;background:var(--water)"></i></div><b class="num">49<span class="unit">W</span></b></div>
+      <div class="row"><span class="lb">인버터</span><div class="bar"><i style="width:0%;background:var(--crit)"></i></div><b class="num">0<span class="unit">W</span></b></div>
+    </div>
+    <div class="net"><span class="lb" style="color:var(--muted);font-size:.8em">배터리로</span><b class="num charging">+161<span class="unit">W</span></b></div>
+  </section>
+
+  <section class="card env" aria-label="실내와 문">
+    <div class="h"><h2>실내 · 문</h2><span class="src">BLE</span></div>
+    <div class="envs">
+      <div><span>실내 온도</span><b class="num">21.8<span class="unit">°C</span></b></div>
+      <div><span>습도</span><b class="num">46<span class="unit">%</span></b></div>
+      <div><span>냉장고</span><b class="num">3.9<span class="unit">°C</span></b></div>
+      <div><span>바깥 밝기</span><b style="font-size:1.2em">어두움</b></div>
+      <div class="door"><span class="dot"></span><span>슬라이드 도어</span><span class="st">닫힘</span></div>
+    </div>
+  </section>
+
+  <section class="card sw" aria-label="스위치">
+    <div class="h"><h2>스위치</h2><span class="src">패널 RS485 · 리모컨 방향키로 이동, 확인으로 켜고 끄기</span></div>
+    <div class="grid" id="grid"></div>
+  </section>
+
+  <section class="card chart" aria-label="배터리 24시간">
+    <div class="h"><h2>배터리 잔량 · 최근 24시간</h2><span class="foot">시안: 예시 값이며 버튼은 실제로 동작하지 않음</span></div>
+    <svg id="spark" viewBox="0 0 1000 140" preserveAspectRatio="none" aria-label="배터리 잔량 그래프"></svg>
+  </section>
+</div>
+
+<script>
+(()=>{
+// 시계
+const pad=n=>String(n).padStart(2,'0');
+function tick(){const d=new Date();document.getElementById('clock').textContent=`${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  document.getElementById('date').textContent=d.toLocaleDateString('ko-KR',{month:'long',day:'numeric',weekday:'short'})}
+tick();setInterval(tick,10000);
+
+// 스위치 12개 (패널 화면 이름 그대로)
+const SW=[['전원',1],['조명1',1],['조명2',0],['조명3',0],['천장등',0],['어닝등',0,'밝기 100%'],
+          ['물펌프',1],['냉장고',1],['TV',1],['USB',1],['야간모드',0],['인버터',0,'3kW','danger']];
+const g=document.getElementById('grid');
+SW.forEach(([n,on,extra,cls])=>{const b=document.createElement('button');b.className='s'+(cls?' '+cls:'');b.setAttribute('aria-pressed',on?'true':'false');
+  const draw=()=>{const p=b.getAttribute('aria-pressed')==='true';b.innerHTML=`<span class="n">${n}</span><span class="st"><i></i>${p?'켜짐':'꺼짐'}${extra?' · '+extra:''}</span>`};
+  draw();b.onclick=()=>{b.setAttribute('aria-pressed',b.getAttribute('aria-pressed')==='true'?'false':'true');draw()};g.appendChild(b)});
+// 리모컨 방향키 이동
+g.addEventListener('keydown',e=>{const bs=[...g.children];const i=bs.indexOf(document.activeElement);if(i<0)return;
+  const cols=getComputedStyle(g).gridTemplateColumns.split(' ').length;
+  const m={ArrowRight:1,ArrowLeft:-1,ArrowDown:cols,ArrowUp:-cols}[e.key];if(m==null)return;
+  const j=i+m;if(j>=0&&j<bs.length){bs[j].focus();e.preventDefault()}});
+
+// 24시간 잔량 (예시: 밤에 내려가고 낮에 태양광으로 차오름)
+const pts=[86,85,84,83,82,81,80,79,78,78,79,82,86,90,93,95,96,95,93,90,87,84,82,80];
+const W=1000,H=140,L=40,B=20,T=10;const x=i=>L+(W-L-10)*i/(pts.length-1),y=v=>T+(H-T-B)*(1-v/100);
+let s='';[0,50,100].forEach(v=>{s+=`<line x1="${L}" x2="${W}" y1="${y(v)}" y2="${y(v)}" stroke="var(--line)"/><text x="4" y="${y(v)+4}">${v}%</text>`});
+s+=`<line x1="${L}" x2="${W}" y1="${y(40)}" y2="${y(40)}" stroke="var(--warn)" stroke-dasharray="6 6"/><text x="${W-80}" y="${y(40)-5}" style="fill:var(--warn)">경보 40%</text>`;
+const d=pts.map((v,i)=>`${i?'L':'M'}${x(i)} ${y(v)}`).join(' ');
+s+=`<path d="${d} L${x(pts.length-1)} ${y(0)} L${x(0)} ${y(0)}Z" fill="var(--good)" opacity=".12"/>`;
+s+=`<path d="${d}" fill="none" stroke="var(--good)" stroke-width="2.5" vector-effect="non-scaling-stroke"/>`;
+s+=`<circle cx="${x(pts.length-1)}" cy="${y(pts[pts.length-1])}" r="5" fill="var(--good)"/>`;
+['-24h','-18h','-12h','-6h','지금'].forEach((t,k)=>{s+=`<text x="${L+(W-L-10)*k/4-(k===4?24:k?14:0)}" y="${H-4}">${t}</text>`});
+document.getElementById('spark').innerHTML=s;
+})();
+</script>
