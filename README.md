@@ -10,6 +10,7 @@
                   캠핑카 12V (퓨즈 1~2A)
 ```
 
+- **배선도(단계별, 인터랙티브): <https://claude.ai/artifact/QSS3ajDXHE48Naq5C5bWvg>** (원본 `docs/wiring.html`)
 - ESP32-S3 보드: [주문한 상품 (알리익스프레스)](https://ko.aliexpress.com/item/1005012855109271.html) (2026-11-26 주문)
 
 | 파일 | 용도 |
