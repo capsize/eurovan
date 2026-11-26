@@ -10,6 +10,8 @@
                   캠핑카 12V (퓨즈 1~2A)
 ```
 
+- ESP32-S3 보드: [주문한 상품 (알리익스프레스)](https://ko.aliexpress.com/item/1005012855109271.html) (2026-11-26 주문)
+
 | 파일 | 용도 |
 |---|---|
 | `esphome/rs485-sniff.yaml` | 패널 버스가 RS485일 때 데이터 엿듣기 |
@@ -26,7 +28,8 @@
 - [x] 연결 자리 확인: 제어 박스의 **남는 RS485 RJ45 포트**
 - [x] 퓨즈 ↔ 기능, 설정값, 적산계(Juntek TK15) 정리 → [docs/protocol.md](docs/protocol.md)
 - [ ] **다음:** RJ45 단자대 어댑터(또는 남는 랜선 잘라서)로 핀 8개 전압 측정 → 12V·GND·RS485 A/B 판정
-- [ ] Waveshare ESP32-S3-RS485-CAN(또는 외장 안테나 `-U`) 구매, `esphome/rs485-sniff.yaml` 핀 번호 수정
+- [x] Waveshare ESP32-S3-RS485-CAN 주문 (2026-11-26, [상품 링크](https://ko.aliexpress.com/item/1005012855109271.html))
+- [ ] 보드 도착 후 `esphome/rs485-sniff.yaml` 핀 번호 수정
 - [ ] RS485 엿듣기(9600bps부터) → 패킷 분석 → 아이폰 제어
 
 ## 진행 순서
