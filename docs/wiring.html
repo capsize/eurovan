@@ -116,11 +116,10 @@ a{color:var(--accent)}
           <path class="wire wa" d="M770 352 H820"/><path class="wire wb" d="M770 377 H820"/><path class="wire wgnd" d="M770 402 H820"/>
         </g>
         <g data-step="5">
-          <path class="wire w12" d="M260 445 V580 H660 M720 580 H760 V470 H820"/>
-          <path class="wire wgnd" d="M240 500 V605 H790 V495 H820"/>
-          <circle class="dot" cx="260" cy="445" r="4"/><circle class="dot" cx="240" cy="500" r="4"/>
-          <rect x="660" y="570" width="60" height="20" rx="4" fill="var(--comp)" stroke="var(--w12)" stroke-width="1.6"/>
-          <text class="wlabel" x="668" y="584">퓨즈 1~2A</text>
+          <path class="wire w12" d="M770 432 H800 V470 H820"/>
+          <path class="wire wgnd" d="M770 456 H788 V495 H820"/>
+          <rect x="794" y="440" width="12" height="22" rx="2" fill="var(--comp)" stroke="var(--w12)" stroke-width="1.6"/>
+          <text class="wlabel" x="700" y="520">12V → 퓨즈 1A → V+</text>
         </g>
         <g data-step="7"><path class="wire wu" d="M115 300 V170"/><text class="wlabel" x="122" y="240">4선 (빨·검·초·노)</text>
           <path class="wire wu wq" d="M300 410 H285 V265"/><text class="wlabel" x="232" y="300">USART</text></g>
@@ -128,7 +127,7 @@ a{color:var(--accent)}
           <text class="wlabel" x="925" y="275">Wi-Fi</text></g>
 
         <!-- 부품 -->
-        <g class="comp" data-part="battery" data-step="1 5">
+        <g class="comp" data-part="battery" data-step="1">
           <rect class="box" x="60" y="420" width="150" height="110" rx="6"/>
           <text class="t" x="76" y="452">배터리</text><text class="s" x="76" y="472">12V · 600Ah</text>
           <text class="s" x="76" y="490">(TK15 적산계)</text>
@@ -153,15 +152,15 @@ a{color:var(--accent)}
           <text class="t" x="362" y="110">Nova-23P-12V</text><text class="s" x="362" y="130">화면 (마스터 추정)</text>
           <rect class="port" x="416" y="182" width="28" height="12" rx="2"/>
         </g>
-        <g class="comp" data-part="tb" data-step="3 4">
-          <rect class="box" x="640" y="330" width="130" height="90" rx="6"/>
+        <g class="comp" data-part="tb" data-step="3 4 5">
+          <rect class="box" x="640" y="330" width="130" height="140" rx="6"/>
           <text class="t" x="652" y="318" font-size="12">RJ45 단자대 케이블</text>
           <rect class="port" x="634" y="391" width="14" height="18" rx="2"/>
           <g font-family="var(--f-mono)">
-            <text class="pin" x="700" y="356">A  → ?</text><text class="pin" x="700" y="381">B  → ?</text><text class="pin" x="700" y="406">GND→ ?</text>
+            <text class="pin" x="700" y="356">A  → ?</text><text class="pin" x="700" y="381">B  → ?</text><text class="pin" x="700" y="406">GND→ ?</text><text class="pin" x="700" y="436">12V→ ?</text><text class="pin" x="700" y="460">GND→ ?</text>
           </g>
-          <text class="s" x="652" y="356">8</text><text class="s" x="652" y="406">1</text>
-          <g class="todo-tag"><rect x="640" y="426" width="130" height="18" rx="3"/><text x="648" y="439">핀 번호 측정 대기</text></g>
+          <text class="s" x="652" y="356">8</text><text class="s" x="652" y="460">1</text>
+          <g class="todo-tag"><rect x="640" y="476" width="130" height="18" rx="3"/><text x="648" y="489">핀 번호 측정 대기</text></g>
         </g>
         <g class="comp" data-part="board" data-step="4 5 6">
           <rect class="box" x="820" y="300" width="150" height="230" rx="6"/>
@@ -291,8 +290,8 @@ const PARTS={
  battery:{n:'배터리',st:['설치됨','ok'],d:'12V, 설정값 600Ah. Juntek TK15 적산계로 잔량을 잰다. 보드 전원도 여기서 퓨즈를 거쳐 받는다.'},
  box:{n:'메인 제어 박스',st:['설치됨','ok'],d:'퓨즈와 릴레이로 12개 출력을 켜고 끈다. RS485 RJ45 포트 2개(같은 버스로 추정) 중 하나는 화면, 하나는 비어 있다.'},
  screen:{n:'Nova-23P-12V 화면',st:['설치됨','ok'],d:'南京协达电气 제품. 제어 박스에 RS485로 명령과 상태 요청을 보내는 쪽(마스터)으로 추정.'},
- tb:{n:'RJ45 단자대 케이블 (컴스 TB943)',st:['구매함','warn'],d:'RJ45 구멍 → 8핀 나사 단자, 1:1 연결. 오른쪽 끝이 1번. 먼저 8핀 전압을 재서 A·B·GND·12V를 찾고, 그대로 보드 연결에 쓴다.'},
- board:{n:'Waveshare ESP32-S3-RS485-CAN',st:['주문함','warn'],d:'7~36V 입력, 절연 RS485·CAN 나사 단자. 120Ω 종단 저항은 끈다(분기 지점이라 버스 끝이 아님). ESPHome으로 엿듣고 웹 화면을 띄운다.',l:'https://ko.aliexpress.com/item/1005012855109271.html'},
+ tb:{n:'RJ45 단자대 케이블 (컴스 TB943)',st:['구매함','warn'],d:'RJ45 구멍 → 8핀 나사 단자, 1:1 연결. 오른쪽 끝이 1번. 먼저 8핀 전압을 재서 A·B·GND·12V를 찾고, 그대로 보드 통신선과 전원선 연결에 쓴다.'},
+ board:{n:'Waveshare ESP32-S3-RS485-CAN',st:['주문함','warn'],d:'7~36V 입력(랜선 12V 핀에서 퓨즈 1A 거쳐 받음), 절연 RS485·CAN 나사 단자. 120Ω 종단 저항은 끈다(분기 지점이라 버스 끝이 아님). ESPHome으로 엿듣고 웹 화면을 띄운다.',l:'https://ko.aliexpress.com/item/1005012855109271.html'},
  tk15:{n:'Juntek TK15 표시창',st:['설치됨','ok'],d:'뒷면 4선(빨강 +, 검정 GND, 초록·노랑 데이터)이 션트로 간다. TTL 시리얼이라 나중에 ESP32로 잔량·전압·전류를 읽을 수 있다(KH-F ESPHome 부품 참고). 화면 잔량(80%)과 달라 제어 박스와는 연결 안 된 것으로 추정.'},
  shunt:{n:'TK15 션트 (전류 센서)',st:['위치 확인 필요','todo'],d:'배터리 − 쪽에 달린 전류 센서. TK15 4선 케이블이 여기로 가는지 따라가서 확인한다.'},
  usart:{n:'USART에 연결된 장치',st:['확인 필요','todo'],d:'제어 박스 USART(TTL 시리얼, 4핀)에 테이프 감은 커넥터가 꽂혀 주름관으로 나간다. 리튬 배터리 BMS일 가능성이 높다. 선을 따라가 끝을 확인한다.'},
@@ -312,7 +311,7 @@ const STEPS=[
  {t:'2 · 화면 ↔ 제어 박스 (기존 RS485 버스)',b:'화면 RJ45 ①과 제어 박스 RS485 포트를 흰색 CAT6 납작 랜선이 잇는다. 화면이 묻고 제어 박스가 답하는 대화가 이 선으로 오간다. 자르지 않는다.'},
  {t:'3 · 빈 RS485 포트 → 단자대 케이블',b:`남는 RS485 포트에 랜선을 꽂아 선반 위 단자대 케이블로 끌어낸다. 멀티미터 V⎓20V, 검정 침 8번, 빨간 침 7→1번.${PIN}`},
  {t:'4 · 단자대 → 보드 RS485',b:'측정으로 찾은 A·B·GND 단자 3개만 보드 나사 단자로 잇는다. A/B가 바뀌면 고장은 안 나고 데이터만 깨지니 바꿔 본다. <b>12V 단자는 절대 A/B에 물리지 않는다.</b>'},
- {t:'5 · 보드 전원',b:'배터리 +12V → 퓨즈 1~2A → 보드 V+, GND → 보드 GND. 랜선 12V 핀을 쓸 수도 있지만 그때도 퓨즈를 거친다.'},
+ {t:'5 · 보드 전원 (랜선 12V 핀)',b:'단자대 케이블의 12V 단자 → <b>퓨즈 1A</b> → 보드 V+, GND 단자 → 보드 GND. 랜선 하나로 통신과 전원을 같이 받고, 메인 스위치에 맞춰 보드도 켜지고 꺼진다. 보드 소비는 0.1~0.3A라 랜선 한 가닥(약 0.5A)으로 충분하고, 12V 핀이 2개면 둘 다 쓴다. 측정에서 12V 핀이 없으면 시거잭이나 배터리 직결(퓨즈 1A)로 바꾼다. 시험 단계에서는 USB-C(노트북·보조배터리)로도 된다.'},
  {t:'6 · 보드 → 아이폰',b:'보드가 Wi-Fi AP(Eurovan)를 띄운다. 아이폰을 붙이고 Safari로 192.168.4.1 접속 → 공유 → 홈 화면에 추가. 처음엔 읽기만, 명령은 조명부터.'},
  {t:'참고 · TK15와 USART',b:'<b>TK15</b>: 표시창 뒷면 4선(빨강 +, 검정 GND, 초록·노랑 데이터)이 배터리 옆 션트로 가는 것으로 추정. 화면 잔량 80%와 TK15 100%가 달라 제어 박스와는 따로 노는 듯하다. 나중에 ESP32로 직접 읽을 수 있다.<br><br><b>USART</b>: 제어 박스의 TTL 시리얼 포트(1:1, 짧은 거리). 연결된 장치는 확인 전(BMS 추정). 두 선 모두 따라가서 끝을 확인한다. ESP32에 물리기 전 신호가 3.3V인지 5V인지 잰다.'}];
 let step=0;const scene=document.getElementById('scene');
