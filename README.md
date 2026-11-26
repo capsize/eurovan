@@ -28,7 +28,7 @@
 - [x] 통신 방식 확인: **RS485** (제어 박스 `RS485 X 2` RJ45 포트 2개, 같은 버스로 추정)
 - [x] 연결 자리 확인: 제어 박스의 **남는 RS485 RJ45 포트**
 - [x] 퓨즈 ↔ 기능, 설정값, 적산계(Juntek TK15) 정리 → [docs/protocol.md](docs/protocol.md)
-- [ ] **다음:** 컴스 TB943(RJ45→단자대, 구매함)으로 핀 8개 전압 측정 → 12V·GND·RS485 A/B 판정
+- [ ] **다음:** RJ45 단자대 케이블(컴스 TB943, 구매함)로 핀 8개 전압 측정 → 12V·GND·RS485 A/B 판정
 - [x] Waveshare ESP32-S3-RS485-CAN 주문 (2026-11-26, [상품 링크](https://ko.aliexpress.com/item/1005012855109271.html))
 - [ ] 보드 도착 후 `esphome/rs485-sniff.yaml` 핀 번호 수정
 - [ ] RS485 엿듣기(9600bps부터) → 패킷 분석 → 아이폰 제어
