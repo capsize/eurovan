@@ -9,9 +9,20 @@
 | 어두운 계기판 (27인치 모니터, 밤용) | `docs/dashboard.html` | <https://claude.ai/artifact/HEcNzGpP6SVuRyze1JTEto> |
 | 흰 공학 도면 (inkworks 스타일, 차량 옆모습에 장치 표시) | `docs/dashboard-ink.html` | <https://claude.ai/artifact/1Nd1sA5E5yRMkAH7sanD6z> |
 | 리소 인쇄 (mono-color 스타일, 코발트·테라코타 2색) | `docs/dashboard-mono.html` | <https://claude.ai/artifact/Eotwm2fdNgcPDUJ9Evwozv> |
+| 캠퍼 평면 (위에서 본 차 안에서 조명·가전을 눌러 켬, 실제 배치 반영) | `docs/dashboard-camper.html` | <https://claude.ai/artifact/5ZoANdN2CLNDCxWX687srY> |
 | 밝은 디자인 캔버스 (모니터 + 아이폰 화면, 장면·스위치 동작) | — | <https://claude.ai/artifact/Cz6j9UqoHiQ8cGcponajCY> |
 
-예시 값이다. 디자인 캔버스만 Play를 누르면 버튼이 동작한다(실제 장치와는 연결 안 됨).
+예시 값이다. 캠퍼 평면과 디자인 캔버스(Play)는 버튼이 동작한다(실제 장치와는 연결 안 됨).
+
+### 실내 배치 (2026-11-27, 캠퍼 평면 시안에 반영)
+
+- **주방 가구:** 슬라이드 도어 반대쪽 벽을 따라 뒤쪽 끝까지. 뒤에서부터 조명1 → 전자렌지 → USB → 싱크(물펌프) → TV(상단)·냉장고(하단).
+- **인버터:** 조명1 아래쪽.
+- **조명2:** 양쪽 측면 상부에 앞뒤로 긴 라인 조명 2줄.
+- **조명3:** 양쪽 측면에 동그란 핀 조명 2개씩, 모두 4개.
+- **어닝등:** 슬라이드 도어 바깥쪽 일자 라인.
+- **침상:** 뒤쪽 실내의 3분의 2, 세로선으로 3단.
+- 시안의 세부 위치(핀 조명 앞뒤 위치, 천장등, 어닝등 길이)는 대략 잡은 것이다.
 
 ### 대시보드에 올릴 것
 

@@ -35,8 +35,8 @@
 | `docs/protocol.md` | 분석한 프로토콜 기록 |
 | `docs/wiring.html` | 단계별 인터랙티브 배선도 ([보기](https://claude.ai/artifact/QSS3ajDXHE48Naq5C5bWvg)) |
 | `docs/wiring-blueprint.html` | 배선도 시안 B: 차량 평면도 배경, 측정 핀 반영 ([보기](https://claude.ai/artifact/RkJ3GkdBVjVmRDxrvPsw3d)) |
-| `docs/displays.md` | 화면과 대시보드: 시안 4종, M5 모니터, 공유기, 7인치 터치 화면, 아이폰 SE3 |
-| `docs/dashboard.html`, `docs/dashboard-ink.html`, `docs/dashboard-mono.html` | 대시보드 시안 (어두운 계기판 / 흰 공학 도면 / 리소 2색) |
+| `docs/displays.md` | 화면과 대시보드: 시안 5종, M5 모니터, 공유기, 7인치 터치 화면, 아이폰 SE3 |
+| `docs/dashboard.html`, `docs/dashboard-ink.html`, `docs/dashboard-mono.html`, `docs/dashboard-camper.html` | 대시보드 시안 (어두운 계기판 / 흰 공학 도면 / 리소 2색 / 캠퍼 평면) |
 | `docs/door-light.md` | 슬라이드 도어 열면 전등 켜기 (샤오미 BLE 문 센서) |
 | `docs/lighting.md` | 스마트 조명 추가: GLEDOPTO WLED 컨트롤러 + 12V LED 스트립, 전원 연결 |
 | `docs/product.md` | 제품화 계획: 개발 중 챙길 것, 인증·라이선스·제조사 협력 |
