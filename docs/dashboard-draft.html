@@ -1,0 +1,246 @@
+<title>유로밴홈 도면 대시보드</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=Noto+Sans+KR:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* 레이아웃: 차 자체가 화면이다. 위에서 본 캠핑카 안에 조명과 가전을 제자리에 두고 눌러서 켠다. 오른쪽에 배터리·물·문 상태, 아래에 장면과 전체 스위치. */
+:root{
+  --bg:#F5F5F3; --panel:#FFFFFF; --ink:#1B1D1F; --muted:#6E7377; --line:#E3E4E2;
+  --van:#F1F1EF; --van-line:#A9ADB0; --accent:#1B1D1F;
+  --lamp:#F5B700; --lamp-glow:rgba(255,205,40,.6); --lamp-bg:#FFF3C4; --lamp-line:#EFCB4A; --mint:#1B1D1F;
+  --ok:#1E8E5A; --warn:#C8501A; --water:#4A90C8; --grey:#9B9A86;
+  --topo:rgba(0,0,0,.05); --on-bg:#1B1D1F; --on-bg-muted:#6E7377; --on-lamp:#FFFFFF;
+  --f-head:'Space Grotesk','Noto Sans KR',system-ui,sans-serif;
+  --f-body:Inter,'Noto Sans KR',system-ui,sans-serif;
+}
+
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.5;position:relative}
+.topo{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+.topo path{fill:none;stroke:var(--topo);stroke-width:1.2}
+.wrap{position:relative;z-index:1}
+.wrap{max-width:1200px;margin:0 auto;padding-block:24px 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:18px}
+button{font-family:inherit;color:inherit}
+button:focus-visible,[role="button"]:focus-visible{outline:3px solid var(--water);outline-offset:2px}
+
+header{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:10px 20px}
+h1{margin:0;color:var(--on-bg);font:700 clamp(26px,4vw,34px)/1.1 var(--f-head);letter-spacing:-.01em}
+.where{margin:0 0 2px;color:var(--on-bg-muted);font-size:13px}
+.pills{display:flex;flex-wrap:wrap;gap:8px}
+.pill{display:inline-flex;align-items:center;gap:6px;padding:5px 11px;border-radius:999px;border:1px solid var(--on-bg-muted);background:transparent;color:var(--on-bg);font-size:12.5px}
+.pill i{width:7px;height:7px;border-radius:50%;background:var(--ok)}
+.pill.sample{border-color:var(--lamp-line);background:var(--lamp-bg)}.pill.sample i{background:var(--lamp)}
+.pill.sample i{background:var(--lamp)}
+
+.main{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(0,1fr);gap:18px;align-items:start}
+@media (max-width:860px){.main{grid-template-columns:minmax(0,1fr)}}
+.card{background:var(--panel);border-radius:20px;padding:18px 20px;min-width:0}
+.stage{padding:14px 14px 10px}
+.stage-top{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:4px 6px 8px}
+h2{margin:0;font:600 15px var(--f-head)}
+.hint{color:var(--muted);font-size:12.5px}
+.scroll{overflow-x:auto}
+svg.van{display:block;width:100%;min-width:600px;height:auto}
+.body{fill:var(--van);stroke:var(--van-line);stroke-width:2}
+.ln{fill:none;stroke:var(--van-line);stroke-width:1.5}
+.furn{fill:var(--panel);stroke:var(--van-line);stroke-width:1.2}
+.zt{fill:var(--muted);font:500 11px var(--f-body);letter-spacing:.06em}
+.dim{fill:none;stroke:var(--van-line);stroke-width:1}
+.dev{cursor:pointer}
+.dev .glow{opacity:0;transition:opacity .25s}
+.dev.on .glow{opacity:1}
+.dev .dot{fill:var(--panel);stroke:var(--van-line);stroke-width:2;transition:fill .15s,stroke .15s}
+.dev.on .dot{fill:var(--lamp);stroke:var(--lamp)}
+.dev text{fill:var(--ink);font:600 12.5px var(--f-body);text-anchor:middle}
+.dev .hit{fill:transparent}
+.dev .glowl{fill:none;stroke:var(--lamp-glow);stroke-width:26;stroke-linecap:round}
+.dev .barl{fill:none;stroke:var(--van-line);stroke-width:5;stroke-linecap:round;transition:stroke .15s}
+.dev.on .barl{stroke:var(--lamp)}
+@media (prefers-reduced-motion:reduce){.dev .glow,.dev .dot{transition:none}}
+
+.side{display:flex;flex-direction:column;gap:18px}
+.batt-row{display:flex;align-items:baseline;gap:6px}
+.big{font:700 60px/1 var(--f-head);font-variant-numeric:tabular-nums}
+.unit{font:500 22px var(--f-head);color:var(--muted)}
+.flow{margin-left:auto;text-align:right;font-size:13px;font-weight:600}
+.flow.pos{color:var(--ok)}.flow.neg{color:var(--warn)}
+.bar{position:relative;height:10px;border-radius:5px;background:var(--line);margin-top:12px}
+.bar>div{position:absolute;inset:0 auto 0 0;border-radius:5px;background:var(--accent)}
+.kv{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:14px}
+.kv div{display:flex;flex-direction:column;gap:1px}
+.kv span{font-size:12px;color:var(--muted)}
+.kv strong{font:600 17px var(--f-head);font-variant-numeric:tabular-nums}
+.tanks{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:12px}
+.tank{display:flex;gap:12px;align-items:flex-end}
+.tube{position:relative;width:34px;height:84px;border-radius:10px;border:1.5px solid var(--van-line);overflow:hidden;flex:none}
+.tube>div{position:absolute;inset:auto 0 0 0;background:var(--c)}
+.tank strong{display:block;font:700 26px/1 var(--f-head);font-variant-numeric:tabular-nums}
+.tank span{font-size:12.5px;color:var(--muted)}
+.pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.pair strong{display:block;font:600 20px var(--f-head);margin-top:2px}
+.pair span{font-size:12.5px;color:var(--muted)}
+
+.scenes{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px}
+.scene{min-height:54px;border-radius:16px;border:1px solid var(--line);background:var(--panel);font-size:15px;font-weight:600;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px}
+.scene small{font-weight:400;font-size:11.5px;color:var(--muted)}
+.scene[aria-pressed="true"]{background:var(--mint);border-color:var(--mint);color:var(--on-lamp)}
+.scene[aria-pressed="true"] small{color:inherit;opacity:.85}
+.switches{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.sw{min-height:64px;padding:10px 14px;border-radius:16px;border:1px solid var(--line);background:var(--panel);text-align:left;cursor:pointer;display:flex;flex-direction:column;justify-content:space-between;gap:6px}
+.sw b{font-size:15px;font-weight:600}
+.sw small{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+.sw[aria-pressed="true"]{background:var(--lamp-bg);border-color:var(--lamp-line)}
+.sw[aria-pressed="true"] small{color:var(--ink)}
+.status{min-height:20px;margin:0;color:var(--on-bg-muted);font-size:13px}
+/* 도면 스타일 덮어쓰기: 흰 종이, 모눈, 가는 선, 각진 테두리, 고정폭 라벨 */
+:root{
+  --bg:#FFFFFF; --panel:#FFFFFF; --ink:#12161B; --muted:#5A636E; --line:#C8CDD5;
+  --van:#FFFFFF; --van-line:#2A323D; --accent:#1F4FBF; --mint:#12161B; --on-lamp:#FFFFFF;
+  --on-bg:#12161B; --on-bg-muted:#5A636E;
+  --grid:rgba(31,79,191,.06); --grid-major:rgba(31,79,191,.13);
+  --f-mono:'JetBrains Mono',ui-monospace,Menlo,monospace;
+}
+body{background-color:var(--bg);
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px),linear-gradient(var(--grid-major) 1px,transparent 1px),linear-gradient(90deg,var(--grid-major) 1px,transparent 1px);
+  background-size:20px 20px,20px 20px,100px 100px,100px 100px}
+header{border-bottom:2px solid var(--ink);padding-bottom:12px}
+.where{font-family:var(--f-mono);font-size:12px;letter-spacing:.06em}
+.card,.scene,.sw{border-radius:0;border:1px solid var(--ink)}
+.pill{border-radius:0;font-family:var(--f-mono);font-size:11.5px;border-color:var(--ink)}
+h2{font:600 12px var(--f-mono);letter-spacing:.14em;color:var(--accent)}
+.hint,.kv span,.tank span,.pair span,.sw small,.scene small{font-family:var(--f-mono);font-size:11.5px}
+.bar,.bar>div,.tube{border-radius:0}
+.tube{border-color:var(--ink)}
+.body{fill:none;stroke-width:1.6}
+.furn{fill:none;stroke-width:1.1}
+.ln{stroke-width:1.1}
+.zt{fill:var(--accent);font-family:var(--f-mono)}
+.dim{stroke:var(--accent)}
+.dev text{font-family:var(--f-mono);font-size:11.5px}
+.dev .dot{fill:var(--bg);stroke:var(--van-line);stroke-width:1.5}
+</style>
+
+<div class="wrap">
+  <header>
+    <div>
+      <p class="where">DWG EV-02 · 축척 없음 · 주차 중 20:37</p>
+      <h1>유로밴홈</h1>
+    </div>
+    <div class="pills">
+      <span class="pill"><i></i>패널 연결됨</span>
+      <span class="pill"><i></i>배터리 계측기</span>
+      <span class="pill"><i></i>도어 센서</span>
+      <span class="pill sample"><i></i>예시 값</span>
+    </div>
+  </header>
+
+  <div class="main">
+    <section class="card stage" aria-label="차량 평면">
+      <div class="stage-top"><h2>차 안</h2><span class="hint" id="onCount"></span></div>
+      <div class="scroll">
+      <svg class="van" id="van" viewBox="-24 0 948 462" role="group" aria-label="위에서 본 캠핑카. 조명과 가전을 눌러 켜고 끈다.">
+        <defs><radialGradient id="glow"><stop offset="0" stop-color="var(--lamp-glow)"/><stop offset="1" stop-color="var(--lamp-glow)" stop-opacity="0"/></radialGradient></defs>
+        <path class="body" d="M70 60 H740 Q850 68 870 180 Q876 215 870 250 Q850 362 740 370 H70 Q28 370 24 320 V110 Q28 60 70 60 Z"/>
+        <path class="ln" d="M560 78 V352 M700 92 Q760 215 700 338 M730 84 Q800 215 730 346"/>
+        <rect class="furn" x="582" y="100" width="92" height="84" rx="18"/><rect class="furn" x="582" y="246" width="92" height="84" rx="18"/>
+        <ellipse class="ln" cx="692" cy="142" rx="10" ry="27"/>
+        <rect class="furn" x="48" y="138" width="342" height="208" rx="12"/><path class="ln" d="M162 138 V346 M276 138 V346"/>
+        <rect class="furn" x="48" y="76" width="482" height="54" rx="8"/><circle class="ln" cx="312" cy="103" r="14"/><rect class="ln" x="132" y="84" width="76" height="38" rx="5"/><text class="zt" x="170" y="107" text-anchor="middle">전자렌지</text><path class="ln" d="M405 76 V130" stroke-dasharray="3 4"/>
+        <path class="ln" d="M390 370 H545" stroke-dasharray="8 6" stroke-width="3"/>
+        <text class="zt" x="105" y="250" text-anchor="middle">침상</text><text class="zt" x="230" y="54" text-anchor="middle">주방 가구</text><text class="zt" x="467" y="54" text-anchor="middle">위 TV · 아래 냉장고</text>
+        <text class="zt" x="628" y="222" text-anchor="middle">운전석</text><text class="zt" x="467" y="390" text-anchor="middle">슬라이드 도어</text>
+        <g class="dim"><path d="M24 15 H872 M24 7 V56 M872 7 V56 M20 19 l8 -8 M868 19 l8 -8"/><path d="M48 37 H560 M48 29 V70 M560 29 V70 M44 41 l8 -8 M556 41 l8 -8"/><path d="M-8 78 V352 M-16 78 H44 M-16 352 H44 M-12 82 l8 -8 M-12 356 l8 -8"/><path d="M898 60 V370 M878 60 H908 M878 370 H908 M894 64 l8 -8 M894 374 l8 -8"/></g>
+        <text class="zt" x="448" y="11" text-anchor="middle">전장 5,255</text>
+        <text class="zt" x="304" y="33" text-anchor="middle">후면 실내 길이 2,890</text>
+        <text class="zt" x="-14" y="215" text-anchor="middle" transform="rotate(-90 -14 215)">후면 실내 폭 1,640</text>
+        <text class="zt" x="912" y="215" text-anchor="middle" transform="rotate(90 912 215)">전폭 1,995</text>
+        <text class="zt" x="24" y="452">단위 mm</text>
+        <path class="dim" d="M534 130 V352 M526 130 H542 M526 352 H542 M530 134 l8 -8 M530 356 l8 -8"/>
+        <text class="zt" x="524" y="241" text-anchor="middle" transform="rotate(-90 524 241)">가구 제외 폭 1,050</text>
+        <g id="devs"></g>
+      </svg>
+      </div>
+    </section>
+
+    <div class="side">
+      <section class="card" aria-label="배터리">
+        <h2>배터리</h2>
+        <div class="batt-row" style="margin-top:8px"><span class="big">80</span><span class="unit">%</span><span class="flow" id="flow"></span></div>
+        <div class="bar"><div style="width:80%"></div></div>
+        <div class="kv">
+          <div><span>전압</span><strong>13.2 V</strong></div>
+          <div><span>태양광</span><strong>180 W</strong></div>
+          <div><span>사용</span><strong id="load">0 W</strong></div>
+        </div>
+      </section>
+      <section class="card" aria-label="물">
+        <h2>물</h2>
+        <div class="tanks">
+          <div class="tank"><div class="tube" style="--c:var(--water)"><div style="height:62%"></div></div><div><strong>62%</strong><span>청수</span></div></div>
+          <div class="tank"><div class="tube" style="--c:var(--grey)"><div style="height:35%"></div></div><div><strong>35%</strong><span>오수</span></div></div>
+        </div>
+      </section>
+      <section class="card pair" aria-label="실내와 문">
+        <div><span>실내</span><strong>21.8° · 46%</strong></div>
+        <div><span>슬라이드 도어</span><strong>닫힘</strong></div>
+      </section>
+    </div>
+  </div>
+
+  <section aria-label="장면" class="scenes" id="scenes"></section>
+  <p class="status" id="status" role="status"></p>
+  <section aria-label="전체 스위치" class="switches" id="switches"></section>
+</div>
+
+<script>
+// k, 이름, 소비전력(W, 예시), 평면 위치(x,y), 조명 여부
+const DEV=[
+ ['ceil','천장등',18,440,232,1],['l1','조명1',8,90,103,1],['l2','조명2',8,340,352,1,[{t:'line',x1:60,x2:545,y:68},{t:'line',x1:60,x2:545,y:362}]],['l3','조명3',8,182,186,1,[{t:'pin',x:182,y:158},{t:'pin',x:432,y:158},{t:'pin',x:182,y:328},{t:'pin',x:432,y:328}]],
+ ['awning','어닝등',12,420,438,1,[{t:'line',x1:280,x2:560,y:410}]],['fridge','냉장고',45,495,103,0],['pump','물펌프',30,365,103,0],
+ ['tv','TV',40,435,103,0],['usb','USB',10,245,103,0],['inv','인버터',25,90,172,0]];
+const SCENES=[
+ ['arrive','도착','불 켜고 물 준비',{ceil:1,l1:1,l3:1,pump:1,usb:1,fridge:1}],
+ ['sleep','취침','조명·TV·펌프 끔',{ceil:0,l1:0,l2:0,l3:0,awning:0,tv:0,pump:0}],
+ ['away','외출','냉장고만 남김',{ceil:0,l1:0,l2:0,l3:0,awning:0,tv:0,pump:0,usb:0,inv:0,fridge:1}],
+ ['off','모두 끄기','전부 끔',Object.fromEntries(DEV.map(d=>[d[0],0]))]];
+const st={sw:{ceil:1,l1:1,fridge:1,usb:1,pump:1},scene:'',arm:0};
+const $=id=>document.getElementById(id), NS='http://www.w3.org/2000/svg';
+const say=t=>{$('status').textContent=t};
+
+function toggle(k){
+  const d=DEV.find(x=>x[0]===k), on=!!st.sw[k];
+  if(k==='inv'&&!on&&st.arm!==1){st.arm=1;say('인버터는 한 번 더 누르면 켜집니다.');setTimeout(()=>{st.arm=0},4000);return}
+  st.arm=0;st.sw[k]=on?0:1;st.scene='';say(d[1]+(on?' 껐습니다.':' 켰습니다.'));render();
+}
+function run(id){const s=SCENES.find(x=>x[0]===id);Object.assign(st.sw,s[3]);st.scene=id;say(s[1]+' 장면: '+s[2]+'.');render()}
+
+function build(){
+  const g=$('devs');
+  DEV.forEach(([k,n,w,x,y,lamp,sh])=>{
+    const e=document.createElementNS(NS,'g');e.setAttribute('class','dev');e.dataset.k=k;e.setAttribute('role','button');e.setAttribute('tabindex','0');
+    e.innerHTML=sh?sh.map(s=>s.t==='line'?`<path class="glow glowl" d="M${s.x1} ${s.y} H${s.x2}"/><path class="barl" d="M${s.x1} ${s.y} H${s.x2}"/><rect class="hit" x="${s.x1}" y="${s.y-12}" width="${s.x2-s.x1}" height="24"/>`:`<circle class="glow" cx="${s.x}" cy="${s.y}" r="46" fill="url(#glow)"/><circle class="dot" cx="${s.x}" cy="${s.y}" r="7"/><rect class="hit" x="${s.x-18}" y="${s.y-18}" width="36" height="36"/>`).join('')+`<text x="${x}" y="${y}">${n}</text>`:(lamp?`<circle class="glow" cx="${x}" cy="${y}" r="78" fill="url(#glow)"/>`:'')+
+      (lamp?`<circle class="dot" cx="${x}" cy="${y}" r="10"/>`:`<rect class="dot" x="${x-11}" y="${y-11}" width="22" height="22" rx="6"/>`)+
+      `<text x="${x}" y="${y+28}">${n}</text><rect class="hit" x="${x-34}" y="${y-22}" width="68" height="58"/>`;
+    e.addEventListener('click',()=>toggle(k));
+    e.addEventListener('keydown',ev=>{if(ev.key==='Enter'||ev.key===' '){ev.preventDefault();toggle(k)}});
+    if(x!=null)g.appendChild(e);
+    const b=document.createElement('button');b.type='button';b.className='sw';b.id='sw-'+k;b.dataset.k=k;
+    b.innerHTML=`<b>${n}</b><small></small>`;b.addEventListener('click',()=>toggle(k));$('switches').appendChild(b);
+  });
+  SCENES.forEach(([id,label,desc])=>{
+    const b=document.createElement('button');b.type='button';b.className='scene';b.id='sc-'+id;
+    b.innerHTML=`${label}<small>${desc}</small>`;b.addEventListener('click',()=>run(id));$('scenes').appendChild(b);
+  });
+}
+function render(){
+  let load=0,n=0;
+  DEV.forEach(([k,name,w])=>{
+    const on=!!st.sw[k];if(on){load+=w;n++}
+    const e=document.querySelector(`.dev[data-k="${k}"]`);if(e){e.classList.toggle('on',on);e.setAttribute('aria-pressed',on);e.setAttribute('aria-label',name+(on?' 켜짐':' 꺼짐'))}
+    const b=$('sw-'+k);b.setAttribute('aria-pressed',on);b.querySelector('small').textContent=on?`켜짐 · ${w} W`:'꺼짐';
+  });
+  SCENES.forEach(s=>$('sc-'+s[0]).setAttribute('aria-pressed',st.scene===s[0]));
+  const net=180-load,f=$('flow');
+  f.textContent=(net>=0?'충전 중 +':'방전 중 −')+Math.abs(net)+' W';f.className='flow '+(net>=0?'pos':'neg');
+  $('load').textContent=load+' W';$('onCount').textContent=n?`${n}개 켜짐 · 눌러서 켜고 끄기`:'모두 꺼짐';
+}
+build();render();
+</script>
