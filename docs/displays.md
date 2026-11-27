@@ -12,6 +12,7 @@
 | 캠퍼 평면 (위에서 본 차 안에서 조명·가전을 눌러 켬, 실제 배치 반영) | `docs/dashboard-camper.html` | <https://claude.ai/artifact/5ZoANdN2CLNDCxWX687srY> |
 | 캠퍼 평면 도면 스타일 (같은 구성, 흰 바탕·파란 격자) | `docs/dashboard-draft.html` | <https://claude.ai/artifact/WpvwpwAtTtTCnnjCpDbNAy> |
 | 아이폰 (스크롤 없는 한 화면, 상태·제어 탭) | `docs/dashboard-iphone.html` | <https://claude.ai/artifact/Dkj9kPU66VvJ7n8xG2EEsi> |
+| 아이폰 예고편 GIF (카페 게시용, 테마 전환 → 장치 하나씩 켜기 → 모두 끄기, 15초 반복) | `docs/media/eurovan-home-teaser.gif` | — |
 | 밝은 디자인 캔버스 (모니터 + 아이폰 화면, 장면·스위치 동작) | — | <https://claude.ai/artifact/Cz6j9UqoHiQ8cGcponajCY> |
 
 캠퍼 평면 두 시안에는 실내·외부 온도, 수평계, 슬라이드 도어 열림 표시가 들어 있다. 수평계와 외부 온도는 센서를 추가해야 한다 → [sensors.md](sensors.md).
