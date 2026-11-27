@@ -1,0 +1,203 @@
+<title>유로밴 배선 도면</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=Noto+Sans+KR:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* 레이아웃: 도면 표제란(머리글) → 차량 평면도를 깔고 그 위에 배선 한 장 → 핀 표와 메모 2단 */
+:root{
+  --bg:#F2F5FA; --panel:#FFFFFF; --ink:#10294A; --muted:#5A6C85; --line:#C9D5E6;
+  --grid:rgba(29,95,208,.07); --grid-major:rgba(29,95,208,.13); --plan:rgba(29,95,208,.22);
+  --accent:#1D5FD0;
+  --w12:#D2453C; --wgnd:#6B7A90; --wa:#1D5FD0; --wb:#0B9585; --wttl:#B7791F; --wair:#7A55C7;
+  --ok:#14804A; --todo:#B45309;
+  --f-head:'Space Grotesk','Noto Sans KR',system-ui,sans-serif;
+  --f-body:Inter,'Noto Sans KR',system-ui,sans-serif;
+  --f-mono:'JetBrains Mono',ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0B1F3D; --panel:#102A50; --ink:#E7EFFB; --muted:#9DB2D1; --line:#2A4877;
+  --grid:rgba(160,200,255,.06); --grid-major:rgba(160,200,255,.12); --plan:rgba(160,200,255,.26);
+  --accent:#7FB2FF;
+  --w12:#FF7D74; --wgnd:#A9B8CE; --wa:#7FB2FF; --wb:#4FD1C0; --wttl:#F0B95A; --wair:#B79CF5;
+  --ok:#5BD08F; --todo:#F0B95A; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0B1F3D; --panel:#102A50; --ink:#E7EFFB; --muted:#9DB2D1; --line:#2A4877;
+  --grid:rgba(160,200,255,.06); --grid-major:rgba(160,200,255,.12); --plan:rgba(160,200,255,.26);
+  --accent:#7FB2FF;
+  --w12:#FF7D74; --wgnd:#A9B8CE; --wa:#7FB2FF; --wb:#4FD1C0; --wttl:#F0B95A; --wair:#B79CF5;
+  --ok:#5BD08F; --todo:#F0B95A; color-scheme:dark}
+
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.6;
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px),linear-gradient(var(--grid-major) 1px,transparent 1px),linear-gradient(90deg,var(--grid-major) 1px,transparent 1px);
+  background-size:20px 20px,20px 20px,100px 100px,100px 100px}
+.wrap{max-width:1240px;margin:0 auto;padding-block:28px 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:20px}
+
+.titleblock{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px 24px;border-bottom:2px solid var(--ink);padding-bottom:12px}
+h1{margin:0;font-family:var(--f-head);font-size:clamp(26px,4vw,38px);font-weight:700;line-height:1.1;letter-spacing:-.01em;text-wrap:balance}
+.sub{margin:4px 0 0;color:var(--muted)}
+.meta{display:grid;grid-template-columns:auto auto;gap:2px 14px;font-family:var(--f-mono);font-size:12px;margin:0}
+.meta dt{color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+.meta dd{margin:0}
+
+.legend{display:flex;flex-wrap:wrap;gap:8px}
+.legend button{display:inline-flex;align-items:center;gap:8px;padding:6px 12px;border:1px solid var(--line);border-radius:999px;background:var(--panel);color:var(--ink);font:500 13px var(--f-body);cursor:pointer}
+.legend button[aria-pressed="true"]{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
+.legend button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.legend i{width:22px;height:0;border-top:3px solid var(--c)}
+.legend i.dash{border-top-style:dashed}
+
+.sheet{overflow-x:auto;border:1px solid var(--line);border-radius:6px;background:color-mix(in srgb,var(--panel) 55%,transparent)}
+svg{display:block;width:100%;min-width:920px;height:auto;font-family:var(--f-body)}
+.plan{fill:none;stroke:var(--plan);stroke-width:1.5}
+.plan-t{fill:var(--plan);font:500 11px var(--f-mono);letter-spacing:.1em}
+.box{fill:var(--panel);stroke:var(--ink);stroke-width:1.5}
+.box.q{stroke-dasharray:5 4}
+.t{fill:var(--ink);font:600 14px var(--f-head)}
+.s{fill:var(--muted);font-size:11.5px}
+.pin{fill:var(--ink);font:600 11.5px var(--f-mono)}
+.pin.m{fill:var(--muted);font-weight:400}
+.w{fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;transition:opacity .15s}
+.v12{stroke:var(--w12)}.gnd{stroke:var(--wgnd)}.a{stroke:var(--wa)}.b{stroke:var(--wb)}.ttl{stroke:var(--wttl)}.air{stroke:var(--wair);stroke-dasharray:3 6}
+.bus{stroke:var(--ink);stroke-width:5}
+.dotq{stroke-dasharray:6 5}
+.wl{fill:var(--muted);font:400 11px var(--f-mono)}
+.fuse{fill:var(--panel);stroke:var(--w12);stroke-width:1.5}
+svg[data-hl] .w{opacity:.12}
+svg[data-hl="v12"] .v12,svg[data-hl="gnd"] .gnd,svg[data-hl="a"] .a,svg[data-hl="b"] .b,svg[data-hl="ttl"] .ttl,svg[data-hl="air"] .air{opacity:1}
+@media (prefers-reduced-motion:reduce){.w{transition:none}}
+
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px}
+.cols>section{min-width:0;background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:18px 20px}
+h2{margin:0 0 10px;font:600 16px var(--f-head)}
+table{width:100%;border-collapse:collapse;font-size:13.5px;font-variant-numeric:tabular-nums}
+th,td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--line)}
+th{color:var(--muted);font-weight:500;font-size:12px}
+td.m{font-family:var(--f-mono)}
+ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px}
+.ok{color:var(--ok);font-weight:600}.todo{color:var(--todo);font-weight:600}
+.sw{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:baseline}
+</style>
+
+<div class="wrap">
+  <header class="titleblock">
+    <div>
+      <h1>유로밴 배선 도면</h1>
+      <p class="sub">Nova-23P 패널의 RS485 버스에 ESP32-S3 보드를 붙이는 배선. 랜선 하나로 통신과 전원을 받는다.</p>
+    </div>
+    <dl class="meta">
+      <dt>도면</dt><dd>EV-01 · 시안 B</dd>
+      <dt>측정</dt><dd>2026-11-26</dd>
+      <dt>차량</dt><dd>스타리아 · 유로밴홈</dd>
+    </dl>
+  </header>
+
+  <div class="legend" role="group" aria-label="선 종류 강조">
+    <button type="button" data-k="v12" aria-pressed="false"><i style="--c:var(--w12)"></i>12V 전원</button>
+    <button type="button" data-k="gnd" aria-pressed="false"><i style="--c:var(--wgnd)"></i>GND</button>
+    <button type="button" data-k="a" aria-pressed="false"><i style="--c:var(--wa)"></i>RS485 A</button>
+    <button type="button" data-k="b" aria-pressed="false"><i style="--c:var(--wb)"></i>RS485 B</button>
+    <button type="button" data-k="ttl" aria-pressed="false"><i style="--c:var(--wttl)"></i>TTL 시리얼</button>
+    <button type="button" data-k="air" aria-pressed="false"><i class="dash" style="--c:var(--wair)"></i>무선 (Wi-Fi · BLE)</button>
+  </div>
+
+  <div class="sheet">
+  <svg id="dwg" viewBox="0 0 1240 720" role="img" aria-label="배터리, 제어 박스, 화면, RJ45 단자대 케이블, ESP32 보드, 공유기, 아이폰의 배선도">
+    <!-- 배경: 차량 평면도 -->
+    <g class="plan">
+      <rect x="60" y="100" width="1120" height="540" rx="70"/>
+      <path d="M260 100 V640"/><path d="M110 200 Q80 370 110 540"/>
+      <rect x="150" y="190" width="72" height="84" rx="12"/><rect x="150" y="466" width="72" height="84" rx="12"/>
+      <rect x="420" y="112" width="400" height="44" rx="4"/><circle cx="500" cy="134" r="12"/><rect x="560" y="120" width="60" height="28" rx="3"/>
+      <rect x="910" y="112" width="258" height="516" rx="10"/><path d="M910 370 H1168"/>
+      <path d="M520 640 H760" stroke-dasharray="8 6" stroke-width="3"/><path d="M520 640 Q520 690 570 690" stroke-dasharray="3 4"/>
+      <rect x="200" y="78" width="110" height="20" rx="6"/><rect x="200" y="642" width="110" height="20" rx="6"/><rect x="920" y="78" width="110" height="20" rx="6"/><rect x="920" y="642" width="110" height="20" rx="6"/>
+      <path d="M60 704 H1180 M60 696 V712 M1180 696 V712"/>
+    </g>
+    <g class="plan-t">
+      <text x="590" y="700" text-anchor="middle">전장 5,255</text>
+      <text x="436" y="106">주방</text><text x="1100" y="134">침상</text><text x="590" y="662" text-anchor="middle">슬라이드 도어</text><text x="118" y="376">운전석</text>
+    </g>
+
+    <!-- 전원: 배터리 → 제어 박스 -->
+    <path class="w v12" d="M250 490 H330"/><text class="wl" x="262" y="507">+</text>
+    <path class="w gnd" d="M175 430 V380"/><path class="w gnd" d="M250 355 H290 V460 H330"/><text class="wl" x="262" y="349">−</text>
+    <!-- TK15 -->
+    <path class="w ttl" d="M175 220 V330"/><text class="wl" x="184" y="280">4선</text>
+    <path class="w ttl dotq" d="M400 520 V560"/>
+    <!-- 화면 랜선 / 단자대 랜선 -->
+    <path class="w bus" d="M550 400 H592 V190 H550"/><text class="wl" x="600" y="260">랜선 8가닥</text>
+    <path class="w bus" d="M550 350 H640"/><text class="wl" x="566" y="342">랜선</text>
+    <!-- 단자대 → 보드 -->
+    <path class="w b" d="M750 325 H880"/><path class="w a" d="M750 350 H880"/>
+    <path class="w gnd" d="M750 375 H880"/><path class="w gnd" d="M750 400 H880"/>
+    <path class="w v12" d="M750 450 H880"/>
+    <rect class="fuse" x="795" y="440" width="40" height="20" rx="4"/><text class="pin" x="815" y="454" text-anchor="middle">1A</text>
+    <text class="wl" x="815" y="478" text-anchor="middle">퓨즈</text>
+    <!-- 무선 -->
+    <path class="w air" d="M970 300 V220"/><text class="wl" x="980" y="264">Wi-Fi</text>
+    <path class="w air" d="M1060 185 H1110"/>
+    <path class="w air" d="M970 520 V570"/><text class="wl" x="980" y="550">BLE</text>
+
+    <!-- 부품 -->
+    <rect class="box" x="100" y="150" width="150" height="70" rx="4"/><text class="t" x="114" y="178">TK15 표시창</text><text class="s" x="114" y="198">Juntek 적산계</text>
+    <rect class="box" x="100" y="330" width="150" height="50" rx="4"/><text class="t" x="114" y="353">TK15 션트</text><text class="s" x="114" y="370">배터리 − 쪽</text>
+    <rect class="box" x="100" y="430" width="150" height="90" rx="4"/><text class="t" x="114" y="460">배터리</text><text class="s" x="114" y="480">12V · 12.6V 측정</text>
+
+    <rect class="box" x="330" y="150" width="220" height="80" rx="4"/><text class="t" x="346" y="182">화면 Nova-23P</text><text class="s" x="346" y="202">랜선으로 전원과 통신</text>
+    <rect class="box" x="330" y="300" width="220" height="220" rx="4"/><text class="t" x="346" y="330">제어 박스</text><text class="s" x="346" y="350">RS485 포트 2개는 병렬</text>
+    <text class="pin" x="542" y="354" text-anchor="end">RS485 위</text><text class="pin" x="542" y="404" text-anchor="end">RS485 아래</text>
+    <text class="pin" x="340" y="464">−</text><text class="pin" x="340" y="494">+ DC-INPUT</text><text class="pin" x="400" y="510" text-anchor="middle">USART</text>
+    <rect class="box q" x="330" y="560" width="140" height="48" rx="4"/><text class="t" x="344" y="582">? 장치</text><text class="s" x="344" y="598">BMS 추정 · 확인 전</text>
+
+    <rect class="box" x="640" y="300" width="110" height="220" rx="4"/><text class="t" x="640" y="290">RJ45 단자대</text>
+    <g>
+      <text class="pin" x="652" y="329">1 B</text><text class="pin" x="652" y="354">2 A</text><text class="pin" x="652" y="379">3 GND</text><text class="pin" x="652" y="404">4 GND</text>
+      <text class="pin m" x="652" y="429">5 GND</text><text class="pin" x="652" y="454">6 12V</text><text class="pin m" x="652" y="479">7 12V</text><text class="pin m" x="652" y="504">8 12V</text>
+    </g>
+
+    <rect class="box" x="880" y="300" width="180" height="220" rx="4"/><text class="t" x="960" y="495">ESP32-S3</text><text class="s" x="960" y="511">RS485/CAN 보드</text>
+    <text class="pin" x="892" y="329">B</text><text class="pin" x="892" y="354">A</text><text class="pin" x="892" y="379">GND</text><text class="pin" x="892" y="404">RS485 GND</text><text class="pin" x="892" y="454">V+ 7~36V</text>
+
+    <rect class="box" x="880" y="150" width="180" height="70" rx="4"/><text class="t" x="896" y="178">공유기 GL-MT3000</text><text class="s" x="896" y="198">보드 IP 고정 192.168.8.x</text>
+    <rect class="box" x="1110" y="130" width="76" height="120" rx="12"/><text class="t" x="1148" y="186" text-anchor="middle">아이폰</text><text class="s" x="1148" y="204" text-anchor="middle">대시보드</text>
+    <rect class="box q" x="880" y="570" width="180" height="48" rx="4"/><text class="t" x="896" y="592">도어 센서</text><text class="s" x="896" y="608">샤오미 MCCGQ02HL · 예정</text>
+  </svg>
+  </div>
+
+  <div class="cols">
+    <section>
+      <h2>단자대 핀 (오른쪽 끝이 1번)</h2>
+      <table>
+        <thead><tr><th>단자</th><th>전압</th><th>용도</th><th>보드</th></tr></thead>
+        <tbody>
+          <tr><td class="m">1</td><td class="m">2.14 V</td><td><span class="sw" style="background:var(--wb)"></span>RS485 B</td><td class="m">B</td></tr>
+          <tr><td class="m">2</td><td class="m">2.25 V</td><td><span class="sw" style="background:var(--wa)"></span>RS485 A</td><td class="m">A</td></tr>
+          <tr><td class="m">3</td><td class="m">0 V</td><td><span class="sw" style="background:var(--wgnd)"></span>GND</td><td class="m">GND</td></tr>
+          <tr><td class="m">4</td><td class="m">0 V</td><td><span class="sw" style="background:var(--wgnd)"></span>GND</td><td class="m">RS485 GND</td></tr>
+          <tr><td class="m">5</td><td class="m">0 V</td><td><span class="sw" style="background:var(--wgnd)"></span>GND</td><td>비움</td></tr>
+          <tr><td class="m">6</td><td class="m">12.6 V</td><td><span class="sw" style="background:var(--w12)"></span>12V</td><td class="m">퓨즈 1A → V+</td></tr>
+          <tr><td class="m">7 · 8</td><td class="m">12.6 V</td><td><span class="sw" style="background:var(--w12)"></span>12V</td><td>비움</td></tr>
+        </tbody>
+      </table>
+    </section>
+    <section>
+      <h2>확인된 것과 남은 것</h2>
+      <ul>
+        <li><span class="ok">확인</span> 위·아래 RS485 포트는 병렬이라 분기 없이 위 포트에 꽂는다.</li>
+        <li><span class="ok">확인</span> 화면 전원 버튼을 꺼도 12V 유지, 메인 스위치를 끄면 보드도 꺼진다.</li>
+        <li><span class="ok">확인</span> TK15 4선은 USART가 아니라 배터리 쪽 션트로 내려간다.</li>
+        <li><span class="todo">남음</span> A/B는 전압 차가 0.11V뿐이라 추정이다. 데이터가 깨지면 1·2번을 바꾼다.</li>
+        <li><span class="todo">남음</span> USART에 연결된 장치, TK15 션트 위치.</li>
+        <li><span class="todo">주의</span> 6·7·8번(12V)은 A/B 단자에 절대 연결하지 않는다.</li>
+      </ul>
+    </section>
+  </div>
+</div>
+
+<script>
+const dwg=document.getElementById('dwg'),btns=[...document.querySelectorAll('.legend button')];
+btns.forEach(b=>b.addEventListener('click',()=>{
+  const on=b.getAttribute('aria-pressed')==='true';
+  btns.forEach(x=>x.setAttribute('aria-pressed','false'));
+  if(on){dwg.removeAttribute('data-hl')}else{b.setAttribute('aria-pressed','true');dwg.setAttribute('data-hl',b.dataset.k)}
+}));
+</script>
