@@ -100,21 +100,31 @@ ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px}
   </div>
 
   <div class="sheet">
-  <svg id="dwg" viewBox="0 0 1240 720" role="img" aria-label="배터리, 제어 박스, 화면, RJ45 단자대 케이블, ESP32 보드, 공유기, 아이폰의 배선도">
-    <!-- 배경: 차량 평면도 -->
+  <svg id="dwg" viewBox="0 0 1250 720" role="img" aria-label="배터리, 제어 박스, 화면, RJ45 단자대 케이블, ESP32 보드, 공유기, 아이폰의 배선도">
+    <!-- 배경: 스타리아 실내 평면도 (위에서 본 모습, 오른쪽이 앞) -->
+    <defs><pattern id="floor" width="45" height="45" patternUnits="userSpaceOnUse" x="80" y="175"><path d="M45 0 H0 V45" fill="none" stroke="var(--plan)" stroke-width=".6"/></pattern></defs>
+    <rect x="80" y="175" width="660" height="378" fill="url(#floor)" stroke="var(--plan)" stroke-width="1"/>
     <g class="plan">
-      <rect x="60" y="100" width="1120" height="540" rx="70"/>
-      <path d="M260 100 V640"/><path d="M110 200 Q80 370 110 540"/>
-      <rect x="150" y="190" width="72" height="84" rx="12"/><rect x="150" y="466" width="72" height="84" rx="12"/>
-      <rect x="420" y="112" width="400" height="44" rx="4"/><circle cx="500" cy="134" r="12"/><rect x="560" y="120" width="60" height="28" rx="3"/>
-      <rect x="910" y="112" width="258" height="516" rx="10"/><path d="M910 370 H1168"/>
-      <path d="M520 640 H760" stroke-dasharray="8 6" stroke-width="3"/><path d="M520 640 Q520 690 570 690" stroke-dasharray="3 4"/>
-      <rect x="200" y="78" width="110" height="20" rx="6"/><rect x="200" y="642" width="110" height="20" rx="6"/><rect x="920" y="78" width="110" height="20" rx="6"/><rect x="920" y="642" width="110" height="20" rx="6"/>
-      <path d="M60 704 H1180 M60 696 V712 M1180 696 V712"/>
+      <path d="M90 140 H1040 Q1180 150 1205 290 Q1212 364 1205 438 Q1180 578 1040 588 H90 Q34 588 30 520 V208 Q34 140 90 140 Z"/>
+      <path d="M70 165 H1000 M70 563 H1000 M48 215 Q40 364 48 513"/>
+      <path d="M740 165 V563"/>
+      <path d="M960 185 Q1040 364 960 543 M1000 172 Q1092 364 1000 556 M1095 205 Q1150 364 1095 523"/>
+      <path d="M1160 250 Q1178 364 1160 478" stroke-dasharray="2 5"/>
+      <path d="M905 140 L920 112 Q934 104 940 118 L930 140 M905 588 L920 616 Q934 624 940 610 L930 588"/>
+      <rect x="770" y="196" width="120" height="112" rx="22"/><rect x="770" y="206" width="34" height="92" rx="12"/>
+      <rect x="770" y="420" width="120" height="112" rx="22"/><rect x="770" y="430" width="34" height="92" rx="12"/>
+      <rect x="780" y="322" width="96" height="84" rx="10"/>
+      <ellipse cx="915" cy="252" rx="13" ry="36"/>
+      <path d="M500 588 H730" stroke-dasharray="8 6" stroke-width="3"/><path d="M500 140 H730" stroke-dasharray="8 6" stroke-width="3"/>
+      <path d="M30 704 H1210 M30 696 V712 M1210 696 V712"/>
+      <path d="M1228 140 V588 M1220 140 H1236 M1220 588 H1236"/>
     </g>
     <g class="plan-t">
-      <text x="590" y="700" text-anchor="middle">전장 5,255</text>
-      <text x="436" y="106">주방</text><text x="1100" y="134">침상</text><text x="590" y="662" text-anchor="middle">슬라이드 도어</text><text x="118" y="376">운전석</text>
+      <text x="620" y="700" text-anchor="middle">전장 5,255</text>
+      <text x="1224" y="364" text-anchor="middle" transform="rotate(90 1224 364)" dy="-8">전폭 1,995</text>
+      <text x="615" y="606" text-anchor="middle">슬라이드 도어</text><text x="615" y="132" text-anchor="middle">슬라이드 도어</text>
+      <text x="830" y="186" text-anchor="middle">운전석</text>
+      <text x="90" y="570">바닥 격자 200 × 200</text>
     </g>
 
     <!-- 전원: 배터리 → 제어 박스 -->
