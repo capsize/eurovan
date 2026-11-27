@@ -303,7 +303,7 @@ const PARTS={
  tk15:{n:'Juntek TK15 표시창',st:['설치됨','ok'],d:'뒷면 4선(빨강 +, 검정 GND, 초록·노랑 데이터)이 션트로 간다. TTL 시리얼이라 나중에 ESP32로 잔량·전압·전류를 읽을 수 있다(KH-F ESPHome 부품 참고). 4선 케이블은 USART가 아니라 아래쪽(배터리·션트 방향)으로 내려간다(2026-11-26 확인). 제어 박스와는 연결 안 됨.'},
  shunt:{n:'TK15 션트 (전류 센서)',st:['위치 확인 필요','todo'],d:'배터리 − 쪽에 달린 전류 센서. TK15 4선 케이블이 아래로 내려가는 것까지 확인(2026-11-26). 끝이 션트인지, 어디 있는지 따라가서 확인한다.'},
  usart:{n:'USART에 연결된 장치',st:['확인 필요','todo'],d:'제어 박스 USART(TTL 시리얼, 4핀)에 테이프 감은 커넥터가 꽂혀 주름관으로 나간다. TK15와는 무관(TK15 선은 아래로 감, 2026-11-26). 리튬 배터리 BMS일 가능성이 높다. 선을 따라가 끝을 확인한다.'},
- door:{n:'슬라이드 도어 센서 (샤오미 MCCGQ02HL)',st:['계획','todo'],d:'문틀에 본체, 슬라이드 도어에 자석. 열림·주변광을 BLE로 보드에 보낸다. 어두울 때 문이 열리면 조명 켜기, 닫히면 3분 뒤 끄기. 조명 명령을 알아낸 뒤 붙인다(docs/door-light.md).'},
+ door:{n:'슬라이드 도어 센서 (샤오미 MCCGQ02HL)',st:['주문함','warn'],d:'문틀에 본체, 슬라이드 도어에 자석. 열림·주변광을 BLE로 보드에 보낸다. 어두울 때 문이 열리면 조명 켜기, 닫히면 3분 뒤 끄기. 조명 명령을 알아낸 뒤 붙인다(docs/door-light.md).'},
  phone:{n:'iPhone',st:['준비됨','ok'],d:'보드 Wi-Fi(Eurovan)에 붙어 Safari로 http://192.168.4.1 접속 → 홈 화면에 추가. 나중에 Home Assistant·HomeKit으로 넓힌다.'}};
 const pl=document.getElementById('partlist');
 for(const [k,p] of Object.entries(PARTS)){const li=document.createElement('li');li.dataset.part=k;li.tabIndex=0;

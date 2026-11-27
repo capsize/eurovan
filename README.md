@@ -55,7 +55,7 @@
 - [x] Waveshare ESP32-S3-RS485-CAN 주문 (2026-11-26, [상품 링크](https://ko.aliexpress.com/item/1005012855109271.html))
 - [ ] 보드 도착 후 `esphome/rs485-sniff.yaml` 핀 번호 수정
 - [ ] RS485 엿듣기(9600bps부터) → 패킷 분석 → 아이폰 제어
-- [ ] (추가 기능) 슬라이드 도어 열면 전등 켜기 → [docs/door-light.md](docs/door-light.md)
+- [ ] (추가 기능) 슬라이드 도어 열면 전등 켜기 → [docs/door-light.md](docs/door-light.md) (센서 주문함 2026-11-27)
 - [ ] (추가 기능) 스마트 LED 스트립 → [docs/lighting.md](docs/lighting.md)
 
 ## 진행 순서
