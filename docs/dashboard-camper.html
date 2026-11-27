@@ -4,36 +4,42 @@
 <style>
 /* 레이아웃: 차 자체가 화면이다. 위에서 본 캠핑카 안에 조명과 가전을 제자리에 두고 눌러서 켠다. 오른쪽에 배터리·물·문 상태, 아래에 장면과 전체 스위치. */
 :root{
-  --bg:#EDF1F3; --panel:#FFFFFF; --ink:#15232D; --muted:#5C6E7A; --line:#D3DDE3;
-  --van:#E3EAEE; --van-line:#9FB1BC; --accent:#2B6C8C;
-  --lamp:#E99A1C; --lamp-glow:rgba(240,165,40,.55); --lamp-bg:#FFF3DC; --lamp-line:#EBC27A;
-  --ok:#23804F; --warn:#B8500F; --water:#3A8BC0; --grey:#8B8A62;
+  --bg:#F5F5F3; --panel:#FFFFFF; --ink:#1B1D1F; --muted:#6E7377; --line:#E3E4E2;
+  --van:#F1F1EF; --van-line:#A9ADB0; --accent:#1B1D1F;
+  --lamp:#F5B700; --lamp-glow:rgba(255,205,40,.6); --lamp-bg:#FFF3C4; --lamp-line:#EFCB4A; --mint:#1B1D1F;
+  --ok:#1E8E5A; --warn:#C8501A; --water:#4A90C8; --grey:#9B9A86;
+  --topo:rgba(0,0,0,.05); --on-bg:#1B1D1F; --on-bg-muted:#6E7377; --on-lamp:#FFFFFF;
   --f-head:'Space Grotesk','Noto Sans KR',system-ui,sans-serif;
   --f-body:Inter,'Noto Sans KR',system-ui,sans-serif;
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
-  --bg:#0E1820; --panel:#16242E; --ink:#E7EFF3; --muted:#8DA2AE; --line:#253742;
-  --van:#1B2C37; --van-line:#4A6272; --accent:#6FB8D8;
-  --lamp:#FFC35E; --lamp-glow:rgba(255,190,90,.5); --lamp-bg:#3A2C12; --lamp-line:#7A5A1E;
-  --ok:#5FD093; --warn:#FF9A5C; --water:#5FB0E5; --grey:#B5B487; color-scheme:dark}}
+  --bg:#121314; --panel:#1C1E20; --ink:#F1F2F2; --muted:#9A9FA3; --line:#2C2F32;
+  --van:#232628; --van-line:#5E6468; --accent:#F1F2F2;
+  --lamp:#FFD84D; --lamp-glow:rgba(255,216,77,.45); --lamp-bg:#4A431F; --lamp-line:#8F7A22; --mint:#F1F2F2;
+  --ok:#4CC98A; --warn:#FF9A6B; --water:#6FB2E6; --grey:#B9B8A2;
+  --topo:rgba(255,255,255,.05); --on-bg:#F1F2F2; --on-bg-muted:#9A9FA3; --on-lamp:#121314; color-scheme:dark}}
 :root[data-theme="dark"]{
-  --bg:#0E1820; --panel:#16242E; --ink:#E7EFF3; --muted:#8DA2AE; --line:#253742;
-  --van:#1B2C37; --van-line:#4A6272; --accent:#6FB8D8;
-  --lamp:#FFC35E; --lamp-glow:rgba(255,190,90,.5); --lamp-bg:#3A2C12; --lamp-line:#7A5A1E;
-  --ok:#5FD093; --warn:#FF9A5C; --water:#5FB0E5; --grey:#B5B487; color-scheme:dark}
+  --bg:#121314; --panel:#1C1E20; --ink:#F1F2F2; --muted:#9A9FA3; --line:#2C2F32;
+  --van:#232628; --van-line:#5E6468; --accent:#F1F2F2;
+  --lamp:#FFD84D; --lamp-glow:rgba(255,216,77,.45); --lamp-bg:#4A431F; --lamp-line:#8F7A22; --mint:#F1F2F2;
+  --ok:#4CC98A; --warn:#FF9A6B; --water:#6FB2E6; --grey:#B9B8A2;
+  --topo:rgba(255,255,255,.05); --on-bg:#F1F2F2; --on-bg-muted:#9A9FA3; --on-lamp:#121314; color-scheme:dark}
 
-body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.5}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.5;position:relative}
+.topo{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+.topo path{fill:none;stroke:var(--topo);stroke-width:1.2}
+.wrap{position:relative;z-index:1}
 .wrap{max-width:1200px;margin:0 auto;padding-block:24px 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:18px}
 button{font-family:inherit;color:inherit}
-button:focus-visible,[role="button"]:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+button:focus-visible,[role="button"]:focus-visible{outline:3px solid var(--water);outline-offset:2px}
 
 header{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:10px 20px}
-h1{margin:0;font:700 clamp(26px,4vw,34px)/1.1 var(--f-head);letter-spacing:-.01em}
-.where{margin:0 0 2px;color:var(--muted);font-size:13px}
+h1{margin:0;color:var(--on-bg);font:700 clamp(26px,4vw,34px)/1.1 var(--f-head);letter-spacing:-.01em}
+.where{margin:0 0 2px;color:var(--on-bg-muted);font-size:13px}
 .pills{display:flex;flex-wrap:wrap;gap:8px}
-.pill{display:inline-flex;align-items:center;gap:6px;padding:5px 11px;border-radius:999px;border:1px solid var(--line);background:var(--panel);font-size:12.5px}
+.pill{display:inline-flex;align-items:center;gap:6px;padding:5px 11px;border-radius:999px;border:1px solid var(--on-bg-muted);background:transparent;color:var(--on-bg);font-size:12.5px}
 .pill i{width:7px;height:7px;border-radius:50%;background:var(--ok)}
-.pill.sample{border-color:var(--lamp-line);background:var(--lamp-bg)}
+.pill.sample{border-color:var(--lamp-line);background:var(--lamp-bg)}.pill.sample i{background:var(--lamp)}
 .pill.sample i{background:var(--lamp)}
 
 .main{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(0,1fr);gap:18px;align-items:start}
@@ -49,6 +55,7 @@ svg.van{display:block;width:100%;min-width:600px;height:auto}
 .ln{fill:none;stroke:var(--van-line);stroke-width:1.5}
 .furn{fill:var(--panel);stroke:var(--van-line);stroke-width:1.2}
 .zt{fill:var(--muted);font:500 11px var(--f-body);letter-spacing:.06em}
+.dim{fill:none;stroke:var(--van-line);stroke-width:1}
 .dev{cursor:pointer}
 .dev .glow{opacity:0;transition:opacity .25s}
 .dev.on .glow{opacity:1}
@@ -86,7 +93,7 @@ svg.van{display:block;width:100%;min-width:600px;height:auto}
 .scenes{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px}
 .scene{min-height:54px;border-radius:16px;border:1px solid var(--line);background:var(--panel);font-size:15px;font-weight:600;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px}
 .scene small{font-weight:400;font-size:11.5px;color:var(--muted)}
-.scene[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--bg)}
+.scene[aria-pressed="true"]{background:var(--mint);border-color:var(--mint);color:var(--on-lamp)}
 .scene[aria-pressed="true"] small{color:inherit;opacity:.85}
 .switches{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
 .sw{min-height:64px;padding:10px 14px;border-radius:16px;border:1px solid var(--line);background:var(--panel);text-align:left;cursor:pointer;display:flex;flex-direction:column;justify-content:space-between;gap:6px}
@@ -94,9 +101,15 @@ svg.van{display:block;width:100%;min-width:600px;height:auto}
 .sw small{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
 .sw[aria-pressed="true"]{background:var(--lamp-bg);border-color:var(--lamp-line)}
 .sw[aria-pressed="true"] small{color:var(--ink)}
-.status{min-height:20px;margin:0;color:var(--muted);font-size:13px}
+.status{min-height:20px;margin:0;color:var(--on-bg-muted);font-size:13px}
 </style>
 
+<svg class="topo" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+  <path d="M-20 140 C160 60 300 200 480 130 S820 40 1220 150"/><path d="M-20 200 C170 120 310 260 490 190 S830 110 1220 215"/><path d="M-20 265 C180 190 320 320 500 255 S840 185 1220 285"/>
+  <path d="M820 520 C900 430 1060 440 1110 530 S1040 700 930 690 S760 620 820 520 Z"/><path d="M860 540 C920 480 1030 490 1065 550 S1010 660 940 650 S810 610 860 540 Z"/><path d="M900 560 C940 525 1005 535 1025 570 S985 625 945 618 S870 595 900 560 Z"/>
+  <path d="M-20 560 C120 500 260 620 400 570 S620 640 760 760 S900 820 1000 820"/><path d="M-20 630 C110 570 250 690 380 645 S590 715 700 820"/><path d="M-20 700 C100 650 230 760 340 730 S470 780 520 820"/>
+  <path d="M120 380 C220 330 380 360 420 430 S330 520 220 500 S60 440 120 380 Z"/><path d="M170 400 C240 370 340 390 365 432 S305 485 235 472 S125 440 170 400 Z"/>
+</svg>
 <div class="wrap">
   <header>
     <div>
@@ -115,7 +128,7 @@ svg.van{display:block;width:100%;min-width:600px;height:auto}
     <section class="card stage" aria-label="차량 평면">
       <div class="stage-top"><h2>차 안</h2><span class="hint" id="onCount"></span></div>
       <div class="scroll">
-      <svg class="van" id="van" viewBox="0 0 900 462" role="group" aria-label="위에서 본 캠핑카. 조명과 가전을 눌러 켜고 끈다.">
+      <svg class="van" id="van" viewBox="-24 0 948 462" role="group" aria-label="위에서 본 캠핑카. 조명과 가전을 눌러 켜고 끈다.">
         <defs><radialGradient id="glow"><stop offset="0" stop-color="var(--lamp-glow)"/><stop offset="1" stop-color="var(--lamp-glow)" stop-opacity="0"/></radialGradient></defs>
         <path class="body" d="M70 60 H740 Q850 68 870 180 Q876 215 870 250 Q850 362 740 370 H70 Q28 370 24 320 V110 Q28 60 70 60 Z"/>
         <path class="ln" d="M560 78 V352 M700 92 Q760 215 700 338 M730 84 Q800 215 730 346"/>
@@ -124,8 +137,16 @@ svg.van{display:block;width:100%;min-width:600px;height:auto}
         <rect class="furn" x="48" y="138" width="342" height="208" rx="12"/><path class="ln" d="M162 138 V346 M276 138 V346"/>
         <rect class="furn" x="48" y="76" width="482" height="54" rx="8"/><circle class="ln" cx="312" cy="103" r="14"/><rect class="ln" x="132" y="84" width="76" height="38" rx="5"/><text class="zt" x="170" y="107" text-anchor="middle">전자렌지</text><path class="ln" d="M405 76 V130" stroke-dasharray="3 4"/>
         <path class="ln" d="M390 370 H545" stroke-dasharray="8 6" stroke-width="3"/>
-        <text class="zt" x="105" y="250" text-anchor="middle">침상</text><text class="zt" x="230" y="48" text-anchor="middle">주방 가구</text><text class="zt" x="467" y="48" text-anchor="middle">위 TV · 아래 냉장고</text>
+        <text class="zt" x="105" y="250" text-anchor="middle">침상</text><text class="zt" x="230" y="54" text-anchor="middle">주방 가구</text><text class="zt" x="467" y="54" text-anchor="middle">위 TV · 아래 냉장고</text>
         <text class="zt" x="628" y="222" text-anchor="middle">운전석</text><text class="zt" x="467" y="390" text-anchor="middle">슬라이드 도어</text>
+        <g class="dim"><path d="M24 15 H872 M24 7 V56 M872 7 V56 M20 19 l8 -8 M868 19 l8 -8"/><path d="M48 37 H560 M48 29 V70 M560 29 V70 M44 41 l8 -8 M556 41 l8 -8"/><path d="M-8 78 V352 M-16 78 H44 M-16 352 H44 M-12 82 l8 -8 M-12 356 l8 -8"/><path d="M898 60 V370 M878 60 H908 M878 370 H908 M894 64 l8 -8 M894 374 l8 -8"/></g>
+        <text class="zt" x="448" y="11" text-anchor="middle">전장 5,255</text>
+        <text class="zt" x="304" y="33" text-anchor="middle">후면 실내 길이 2,890</text>
+        <text class="zt" x="-14" y="215" text-anchor="middle" transform="rotate(-90 -14 215)">후면 실내 폭 1,640</text>
+        <text class="zt" x="912" y="215" text-anchor="middle" transform="rotate(90 912 215)">전폭 1,995</text>
+        <text class="zt" x="24" y="452">단위 mm</text>
+        <path class="dim" d="M534 130 V352 M526 130 H542 M526 352 H542 M530 134 l8 -8 M530 356 l8 -8"/>
+        <text class="zt" x="524" y="241" text-anchor="middle" transform="rotate(-90 524 241)">가구 제외 폭 1,050</text>
         <g id="devs"></g>
       </svg>
       </div>
